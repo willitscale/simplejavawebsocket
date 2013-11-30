@@ -45,7 +45,7 @@ public class WSRRequestParser extends WSRAbstractionStatic
 				"Upgrade: WebSocket\r\n" +
 				"Connection: Upgrade\r\n" +
 				"Sec-WebSocket-Origin: " + wsrRequest.origin + "\r\n" +
-//				"Sec-WebSocket-Location: " + wsrRequest.host + "\r\n" +
+				"Sec-WebSocket-Location: " + wsrRequest.host + "\r\n" +
 				"Sec-WebSocket-Accept: " + WSRUtils.generateKey( wsrRequest.socketKey ) + "\r\n" +
 				"\r\n" + WSRUtils.generateKey( wsrRequest.socketKey );
 		

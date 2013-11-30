@@ -1,11 +1,12 @@
 package uk.co.n3tw0rk.websocketregistration.threads;
 
 import java.io.BufferedReader;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-import uk.co.n3tw0rk.websocketregistration.framing.DataFrame;
+import uk.co.n3tw0rk.websocketregistration.framing.DataFrameBuilder;
 import uk.co.n3tw0rk.websocketregistration.utils.WSRRequestParser;
 import uk.co.n3tw0rk.websocketregistration.wrappers.WSRAbstractionThread;
 
@@ -18,9 +19,9 @@ public class WSRSocketClient extends WSRAbstractionThread
 
 	private BufferedReader bufferedReader = null;
 	private PrintWriter printWriter = null;
-	private InputStreamReader inputStreamReader = null;
+	private InputStream inputStream = null;
 	
-	private int charValue;
+	private int buffer;
 	
 	private boolean listen = true;
 	
@@ -36,8 +37,8 @@ public class WSRSocketClient extends WSRAbstractionThread
 			boolean handler = true;
 			console( "Client connected" );
 			
-			this.inputStreamReader = new InputStreamReader( this.socket.getInputStream() );
-			this.bufferedReader = new BufferedReader( this.inputStreamReader );
+			this.inputStream = this.socket.getInputStream();
+			//this.bufferedReader = new BufferedReader( this.inputStream );
 			this.printWriter = new PrintWriter( this.socket.getOutputStream(), true );
 
 			while( this.listen )
@@ -50,28 +51,36 @@ public class WSRSocketClient extends WSRAbstractionThread
 
 					this.input = new StringBuilder();
 
-					DataFrame dataFrame = new DataFrame();
-					
-					while( -1 != ( this.charValue = ( int ) this.bufferedReader.read() ) )
+					DataFrameBuilder dataFrameBuilder = new DataFrameBuilder();
+
+
+					while( 0 != this.inputStream.available() )
 					{
-						dataFrame.setFrameData( this.charValue );
-						System.out.println( this.charValue );
-						//this.input.append( ( char ) charValue );
+						this.buffer = this.inputStream.read();
+						
+						dataFrameBuilder.setFrameData( this.buffer );
+						
+						console( this.buffer );
+						console( ( char ) this.buffer );
+						
+						this.input.append( ( char ) this.buffer );
 					}
+					
+					if( 0 < this.input.length() )
+						console( this.input.toString() );
 					
 				}
 				else
 				{
 					handler = false;
 					this.input = new StringBuilder();
-	
-					while( this.bufferedReader.ready() )
+
+					while( 0 != this.inputStream.available() )
 					{
-						this.charValue = ( int ) this.bufferedReader.read();
-						//System.out.println( charValue );
-						this.input.append( ( char ) this.charValue );
+						this.buffer = this.inputStream.read();
+						this.input.append( ( char ) this.buffer );
 					}
-	
+
 					if( 0 == this.input.length() )
 						continue;
 	

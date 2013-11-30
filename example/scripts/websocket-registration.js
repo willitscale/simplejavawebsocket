@@ -26,12 +26,12 @@ SocketClient.prototype.connect = function()
 
 SocketClient.prototype.bindListeners = function()
 {
-	var handler = this.webSocket;
+	var handler = this;
 
 	this.webSocket.onopen = function (event)
 	{
 		console.log( event );
-		handler.send( "TITS?" );
+		handler.send( 'test' );
 	};
 	
 	this.webSocket.onmessage = function( event )
@@ -40,6 +40,11 @@ SocketClient.prototype.bindListeners = function()
 	};
 	
 	this.webSocket.onclose = function( event )
+	{
+		console.log( event );
+	};
+	
+	this.webSocket.error = function( event )
 	{
 		console.log( event );
 	};

@@ -21,4 +21,39 @@ public class WSRAbstractionThread extends Thread
 			System.out.println( dateFormat.format(date) + objectName + " :: " + message );
 		}
 	}
+
+	public void console( short message )
+	{
+		this.console( "" + message );
+	}
+
+	public void console( byte message )
+	{
+		this.console( "" + message );
+	}
+
+	public void console( float message )
+	{
+		this.console( "" + message );
+	}
+
+	public void console( double message )
+	{
+		this.console( "" + message );
+	}
+
+	public void console( long message )
+	{
+		this.console( "" + message );
+	}
+
+	public void console( int message )
+	{
+		this.console( "" + message );
+	}
+
+	public void console( char message )
+	{
+		this.console( "" + message );
+	}
 }
