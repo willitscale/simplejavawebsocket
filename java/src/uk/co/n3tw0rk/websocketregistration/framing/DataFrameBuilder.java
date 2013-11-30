@@ -39,14 +39,14 @@ public class DataFrameBuilder extends DataFrame
 		this.RSV3 = ( ( data >> 3 ) & 0x1 );
 		this.OP_CODE = ( ( data >> 4 ) & 0xF );
 
-		this.MASK = ( data & 0x1 );
-		this.PAYLOAD = ( ( data >> 1 ) & 0x7F );
-
 		this.buildingDataSet = DATA_FRAME_MASK_PAYLOAD_DATA;
 	}
 	
 	private void maskPayload( int data )
 	{
+
+		this.MASK = ( data & 0x1 );
+		this.PAYLOAD = ( ( data >> 1 ) & 0x7F );
 
 		if( 0x7F == this.PAYLOAD )
 			this.buildingDataSet = DATA_FRAME_EXTENDED_PAYLOAD;
