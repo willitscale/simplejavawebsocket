@@ -8,12 +8,12 @@ public class DataFrameBuilder extends DataFrame
 	{
 		switch( this.buildingDataSet )
 		{
-			case DATA_FRAME_HEADER :
+			case DATA_FRAME_FIN_RSV_OPCODE_BYTE :
 			{
-				this.buildHeader( data );
+				this.finRsvOpcode( data );
 				break;
 			}
-			case DATA_FRAME_MASK_PAYLOAD_DATA :
+			case DATA_FRAME_MASK_PAYLOAD_BYTE :
 			{
 				this.maskPayload( data );
 				break;
@@ -31,7 +31,7 @@ public class DataFrameBuilder extends DataFrame
 		}
 	}
 
-	private void buildHeader( int data )
+	private void finRsvOpcode( int data )
 	{
 		this.FIN = ( data & 0x1 );
 		this.RSV1 = ( ( data >> 1 ) & 0x1 );
@@ -39,9 +39,9 @@ public class DataFrameBuilder extends DataFrame
 		this.RSV3 = ( ( data >> 3 ) & 0x1 );
 		this.OP_CODE = ( ( data >> 4 ) & 0xF );
 
-		this.buildingDataSet = DATA_FRAME_MASK_PAYLOAD_DATA;
+		this.buildingDataSet = DATA_FRAME_MASK_PAYLOAD_BYTE;
 	}
-	
+
 	private void maskPayload( int data )
 	{
 

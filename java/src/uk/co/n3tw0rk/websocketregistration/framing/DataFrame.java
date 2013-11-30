@@ -5,8 +5,8 @@ import uk.co.n3tw0rk.websocketregistration.wrappers.WSRAbstraction;
 public abstract class DataFrame extends WSRAbstraction
 {
 
-	public final static byte DATA_FRAME_HEADER = 0x0;
-	public final static byte DATA_FRAME_MASK_PAYLOAD_DATA = 0x01;
+	public final static byte DATA_FRAME_FIN_RSV_OPCODE_BYTE = 0x0;
+	public final static byte DATA_FRAME_MASK_PAYLOAD_BYTE = 0x01;
 	public final static byte DATA_FRAME_EXTENDED_PAYLOAD = 0x2;
 	public final static byte DATA_FRAME_MASKING_KEY = 0x4;
 	public final static byte DATA_FRAME_MASKING_KEY_CONTINUED = 0x8;
@@ -23,7 +23,7 @@ public abstract class DataFrame extends WSRAbstraction
 	protected int PAYLOAD;
 	protected long PAYLOAD_EXTENDED;
 	
-	protected byte buildingDataSet = DATA_FRAME_HEADER;
+	protected byte buildingDataSet = DATA_FRAME_FIN_RSV_OPCODE_BYTE;
 	
 	public DataFrame(){}
 	
