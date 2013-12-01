@@ -17,7 +17,6 @@ public class WSRSocketClient extends WSRAbstractionThread
 	private StringBuilder input = null;
 	private String output = null;
 
-	private BufferedReader bufferedReader = null;
 	private PrintWriter printWriter = null;
 	private InputStream inputStream = null;
 	
@@ -48,27 +47,13 @@ public class WSRSocketClient extends WSRAbstractionThread
 
 				if( !handler )
 				{
-
-					this.input = new StringBuilder();
-
 					DataFrameBuilder dataFrameBuilder = new DataFrameBuilder();
 
-
 					while( 0 != this.inputStream.available() )
-					{
-						this.buffer = this.inputStream.read();
-						
-						dataFrameBuilder.setFrameData( this.buffer );
-						
-						console( this.buffer );
-						console( ( char ) this.buffer );
-						
-						this.input.append( ( char ) this.buffer );
-					}
+						dataFrameBuilder.setFrameData( this.inputStream.read() );
 					
-					if( 0 < this.input.length() )
-						console( this.input.toString() );
-					
+					dataFrameBuilder.getPayload();
+
 				}
 				else
 				{

@@ -3,6 +3,11 @@ package uk.co.n3tw0rk.websocketregistration.framing;
 public class DataFrameBuilder extends DataFrame
 {
 
+	public DataFrameBuilder()
+	{
+		this.stringBuilder = new StringBuilder();
+	}
+	
 	@Override
 	public void setFrameData( int data )
 	{
@@ -18,9 +23,14 @@ public class DataFrameBuilder extends DataFrame
 				this.maskPayload( data );
 				break;
 			}
-			case DATA_FRAME_EXTENDED_PAYLOAD :
+			case DATA_FRAME_EXTENDED_PAYLOAD_FIRST_BYTE :
 			{
-				this.buildExtendedPayload( data );
+				this.extendedPayloadFirstByte( data );
+				break;
+			}
+			case DATA_FRAME_EXTENDED_PAYLOAD_SECOND_BYTE :
+			{
+				this.extendedPayloadSecondByte( data );
 				break;
 			}
 			case DATA_FRAME_MASKING_KEY :
@@ -28,16 +38,22 @@ public class DataFrameBuilder extends DataFrame
 				this.buildMaskingKey( data );
 				break;
 			}
+			case DATA_FRAME_PAYLOAD_DATA :
+			{
+				this.buildingPayloadData( data );
+				break;
+			}
 		}
 	}
 
 	private void finRsvOpcode( int data )
 	{
-		this.FIN = ( data & 0x1 );
-		this.RSV1 = ( ( data >> 1 ) & 0x1 );
-		this.RSV2 = ( ( data >> 2 ) & 0x1 );
-		this.RSV3 = ( ( data >> 3 ) & 0x1 );
-		this.OP_CODE = ( ( data >> 4 ) & 0xF );
+		this.FIN = ( data & ONE_BIT );
+		this.RSV1 = ( ( data >> 1 ) & ONE_BIT );
+		this.RSV2 = ( ( data >> 2 ) & ONE_BIT );
+		this.RSV3 = ( ( data >> 3 ) & ONE_BIT );
+		console( data >> 4 );
+		this.OP_CODE = ( ( data >> 4 ) & FOUR_BITS );
 
 		this.buildingDataSet = DATA_FRAME_MASK_PAYLOAD_BYTE;
 	}
@@ -45,12 +61,14 @@ public class DataFrameBuilder extends DataFrame
 	private void maskPayload( int data )
 	{
 
-		this.MASK = ( data & 0x1 );
-		this.PAYLOAD = ( ( data >> 1 ) & 0x7F );
+		this.MASK = ( data & ONE_BIT );
+		this.PAYLOAD = ( ( data >> 1 ) & SEVEN_BITS );
 
-		if( 0x7F == this.PAYLOAD )
-			this.buildingDataSet = DATA_FRAME_EXTENDED_PAYLOAD;
-		else if( 0x1 == this.MASK )
+		if( TWO_BYTE_EXTENDED_PAYLOAD == this.PAYLOAD )
+			this.buildingDataSet = DATA_FRAME_EXTENDED_PAYLOAD_FIRST_BYTE;
+		if( EIGHT_BYTE_EXTENDED_PAYLOAD == this.PAYLOAD )
+			this.buildingDataSet = DATA_FRAME_EXTENDED_PAYLOAD_FIRST_BYTE;
+		else if( ONE_BIT == this.MASK )
 			this.buildingDataSet = DATA_FRAME_MASKING_KEY;
 		else
 			this.buildingDataSet = DATA_FRAME_PAYLOAD_DATA;
@@ -65,9 +83,18 @@ public class DataFrameBuilder extends DataFrame
 		this.console( "----" );
 	}
 	
-	private void buildExtendedPayload( int data )
+	private void extendedPayloadFirstByte( int data )
 	{
-		this.PAYLOAD_EXTENDED = data;
+		this.PAYLOAD_EXTENDED = data << 8;
+		this.buildingDataSet = DATA_FRAME_EXTENDED_PAYLOAD_FIRST_BYTE;
+
+		this.console( "PAYLOAD_EXTENDED : " + this.PAYLOAD_EXTENDED );
+		this.console( "----" );
+	}
+	
+	private void extendedPayloadSecondByte( int data )
+	{
+		this.PAYLOAD_EXTENDED = this.PAYLOAD_EXTENDED | data;
 		
 		if( 0x1 == this.MASK )
 			this.buildingDataSet = DATA_FRAME_MASKING_KEY;
@@ -86,6 +113,29 @@ public class DataFrameBuilder extends DataFrame
 
 		this.console( "MASKING_KEY : " + this.MASKING_KEY );
 		this.console( "----" );
+	}
+	
+	private byte[] byteBuffer;
+	
+	private void buildingPayloadData( int data )
+	{
+		
+		console( data );
+		//console( ( char ) data );
+		//console( ( char ) ( data >> 2 ) );
+		//console( ( char ) ( data << 2 ) );
+		
+		this.stringBuilder.append( ( char ) data );
+
+	}
+	
+	public void getPayload()
+	{
+		if( 0 < this.stringBuilder.length() )
+		{
+			console( this.stringBuilder.length() );
+			console( this.stringBuilder.toString() );
+		}
 	}
 
 }
