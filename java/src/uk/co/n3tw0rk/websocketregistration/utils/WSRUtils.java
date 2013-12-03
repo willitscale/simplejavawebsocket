@@ -63,10 +63,20 @@ public class WSRUtils extends WSRAbstraction
 	{
 		String result = "";
 
-		for( int i=0; i < b.length; i++ )
+		for( int i = 0; i < b.length; i++ )
 			result += Integer.toString( ( b[ i ] & 0xff ) + 0x100, 16 ).substring( 1 );
 
 		return result;
 	}
+	
+	public static byte[] stringConvert( String s )
+	{
+		return s.getBytes();
+	}
 
+	public static int generateMaskKeyPart()
+	{
+		return ( int )( Math.random() * ( ( ( ( int ) ( Byte.MAX_VALUE ) * 2 ) - 0) + 1) );
+	}
+	
 }

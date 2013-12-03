@@ -5,7 +5,7 @@ import uk.co.n3tw0rk.websocketregistration.wrappers.WSRAbstractionStatic;
 
 public class WSRRequestParser extends WSRAbstractionStatic
 {
-	public static String responseHeader( String request )
+	public static byte[] responseHeader( String request )
 	{
 		return buildResponse( parseRequest( request ) );
 	}
@@ -39,7 +39,7 @@ public class WSRRequestParser extends WSRAbstractionStatic
 		return wsrRequest;
 	}
 	
-	public static String buildResponse( WSRRequest wsrRequest )
+	public static byte[] buildResponse( WSRRequest wsrRequest )
 	{
 		String response = "HTTP/1.1 101 WebSocket Protocol Handshake\r\n" +
 				"Upgrade: WebSocket\r\n" +
@@ -49,6 +49,6 @@ public class WSRRequestParser extends WSRAbstractionStatic
 				"Sec-WebSocket-Accept: " + WSRUtils.generateKey( wsrRequest.socketKey ) + "\r\n" +
 				"\r\n" + WSRUtils.generateKey( wsrRequest.socketKey );
 		
-		return response;
+		return WSRUtils.stringConvert( response );
 	}
 }
