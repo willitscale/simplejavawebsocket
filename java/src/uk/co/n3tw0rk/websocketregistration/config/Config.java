@@ -18,4 +18,5 @@ public class Config extends Abstraction
 	 * 
 	 */
 	public static boolean DEBUGGING_VERBOSE = true;
+
 }

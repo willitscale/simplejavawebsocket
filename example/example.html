@@ -5,6 +5,7 @@
 	
 		<script src="scripts/jquery-1.0.10.2.js"></script>
 		<script src="scripts/jquery-clean-table-1.0.js"></script>
+		<script src="scripts/date.js"></script>
 		<script src="scripts/websocket-registration.js"></script>
 		
 		<link rel="stylesheet" href="styles/example.css">
@@ -13,10 +14,10 @@
 		
 			$( document ).ready( function()
 			{
-				$( '#example-table' ).cleanDataTable();
+				$( '#log-table' ).cleanDataTable();
 			} );
 		
-			var socketClient = new SocketClient( 'ws://localhost:8081' );
+			var socketClient = new SocketClient();
 		
 		</script>
 	
@@ -24,46 +25,49 @@
 
 	<body>
 	
-		<table id="example-table">
+		<table id="log-table">
 		
 			<thead>
 			
 				<tr>
 				
-					<th>Header 1</th>
-					<th>Header 2</th>
-					<th>Header 3</th>
-					<th>Header 4</th>
+					<th>Log</th>
 				
 				</tr>
 			
 			</thead>
 			
 			<tbody>
+		
+			</tbody>
+			
+			<tfoot>
 			
 				<tr>
 				
-					<td>Data 1</td>
-					<td>Data 1</td>
-					<td>Data 1</td>
-					<td>Data 1</td>
-				
-				</tr>
-			
-				<tr>
-				
-					<td>Data 2</td>
-					<td>Data 2</td>
-					<td>Data 2</td>
-					<td>Data 2</td>
+					<th>
+
+						<input type="text" value="ws://192.168.1.2:8081" id="url" /> 
+
+						<input type="button" value="Connect" onclick="socketClient.connectURL( $( '#url' ).val() );" />
+
+						<input type="button" value="Disconnect" onclick="socketClient.disconnect();" />
+
+						<input type="text" value="1234" id="msg" /> 
+
+						<input type="button" value="Send" onclick="socketClient.send( $( '#msg' ).val() );" />
+
+						<input type="button" value="Clear Log" onclick="socketClient.clearLog();" />
+					</th>
 				
 				</tr>
 		
-			</tbody>
+			</tfoot>
 		
 		</table>
 	
 	
+
 	</body>
 
 

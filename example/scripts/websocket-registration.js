@@ -1,11 +1,16 @@
-function SocketClient( url )
+function SocketClient()
 {
-	this.url = url;
-	this.init();
+//	this.url = url;
+//	this.init();
 };
 
 SocketClient.prototype.url = null;
 SocketClient.prototype.webSocket = null;
+
+SocketClient.prototype.setURL = function( url )
+{
+	this.url = url;
+};
 
 SocketClient.prototype.init = function()
 {
@@ -18,6 +23,13 @@ SocketClient.prototype.reconnect = function()
 	this.connect();
 };
 
+SocketClient.prototype.connectURL = function( url )
+{
+	this.url = url;
+	this.webSocket = new WebSocket( this.url );
+	this.bindListeners();
+};
+
 SocketClient.prototype.connect = function()
 {
 	this.webSocket = new WebSocket( this.url );
@@ -28,27 +40,30 @@ SocketClient.prototype.bindListeners = function()
 {
 	var handler = this;
 
-	this.webSocket.onopen = function (e)
+	this.webSocket.onopen = function( event )
 	{
-		console.log( e );
-		handler.send( 'test' );
+		console.log( event );
+		handler.dataLog( 'Connected to : ' + handler.url );
+		
+	//	handler.send( "1234" );
 	};
 	
-	this.webSocket.onmessage = function( e )
+	this.webSocket.onmessage = function( event )
 	{
-		console.log( e );
+		console.log( event );
+		handler.dataLog( 'Message Received : ' + event.data );
 	};
 	
-	this.webSocket.onclose = function( e )
+	this.webSocket.onclose = function( event )
 	{
-		console.log("closed - code " + e.code + ", reason " + e.reason);
-		console.log( e );
+		console.log( event );
+		handler.dataLog( 'Disconnected : Code - ' + event.code + ' Reason : ' + event.reason );
 	};
 	
-	this.webSocket.error = function( e )
+	this.webSocket.onerror = function( event )
 	{
-		console.log("closed - code " + e.code + ", reason " + e.reason);
-		console.log( e );
+		console.log( event );
+		handler.dataLog( 'Error' );
 	};
 };
 
@@ -61,6 +76,16 @@ SocketClient.prototype.disconnect = function()
 
 SocketClient.prototype.send = function( data )
 {
-	console.log( 'Sending : ' + data );
+	this.dataLog( 'Sending : ' + data );
 	this.webSocket.send( data );
+};
+
+SocketClient.prototype.dataLog = function( message )
+{
+	$( '#log-table tbody' ).append( '<tr><td><p>' + ( new Date() ).getTimeStamp() + '::' + message + '</p></td></tr>' );
+};
+
+SocketClient.prototype.clearLog = function()
+{
+	$( '#log-table tbody' ).html( '' );
 };

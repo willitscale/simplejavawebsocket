@@ -72,7 +72,7 @@ public class SocketClient extends AbstractionThread
 						break reset;
 					}
 
-					console( " << " + this.buffer );
+					console( "<< " + this.buffer );
 
 					if( !handler )
 						this.dataFrameRequest.setFrameData( this.buffer );
@@ -81,21 +81,17 @@ public class SocketClient extends AbstractionThread
 					
 				}
 				while( 0 != this.inputStream.available() );
+				
+				System.out.println( "" );
 
 				if( !handler )
 				{
 					this.dataFrameResponse.setPayload( this.dataFrameRequest.getPayload(), this.dataFrameRequest.getOPCode() );
 	
-					IntBuffer intBuffer = this.dataFrameResponse.getDataFrame();
-					
-					for( int i = 0; i < intBuffer.limit(); i++ )
-					{
-						console( " >> " + intBuffer.get( i ) );
-						this.outputStream.write( intBuffer.get( i ) );
-					}
+					ByteBuffer byteBuffer = this.dataFrameResponse.getDataFrame();
 
+					this.outputStream.write( byteBuffer.array(), 0, byteBuffer.limit() );
 					this.outputStream.flush();
-
 				}
 				else
 				{
@@ -109,6 +105,8 @@ public class SocketClient extends AbstractionThread
 					this.outputStream.write( this.output );
 					this.outputStream.flush();
 				}
+				
+				System.out.println( "" );
 
 			}
 			
