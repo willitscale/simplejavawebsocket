@@ -56,4 +56,9 @@ public class Abstraction
 	{
 		this.console( "" + message );
 	}
+
+	public void console( boolean message )
+	{
+		this.console( "" + message );
+	}
 }

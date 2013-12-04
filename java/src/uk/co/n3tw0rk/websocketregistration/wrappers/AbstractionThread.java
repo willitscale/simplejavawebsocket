@@ -56,4 +56,9 @@ public class AbstractionThread extends Thread
 	{
 		this.console( "" + message );
 	}
+
+	public void console( boolean message )
+	{
+		this.console( "" + message );
+	}
 }
