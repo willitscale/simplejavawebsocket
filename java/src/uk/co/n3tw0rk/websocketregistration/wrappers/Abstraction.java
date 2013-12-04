@@ -4,9 +4,9 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import uk.co.n3tw0rk.websocketregistration.config.WSRConfig;
+import uk.co.n3tw0rk.websocketregistration.config.Config;
 
-public class WSRAbstraction
+public class Abstraction
 {
 	public static DateFormat dateFormat = new SimpleDateFormat("[yyyy/MM/dd HH:mm:ss] :: ");
 	public static String objectName = null;
@@ -14,7 +14,7 @@ public class WSRAbstraction
 
 	public void console( String message )
 	{
-		if( WSRConfig.DEBUGGING_VERBOSE )
+		if( Config.DEBUGGING_VERBOSE )
 		{
 			objectName = this.getClass().getName();
 			date = new Date();

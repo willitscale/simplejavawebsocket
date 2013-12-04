@@ -2,9 +2,9 @@ package uk.co.n3tw0rk.websocketregistration.pools;
 
 import java.util.HashMap;
 
-import uk.co.n3tw0rk.websocketregistration.wrappers.WSRAbstraction;
+import uk.co.n3tw0rk.websocketregistration.wrappers.Abstraction;
 
-public class WSRPool extends WSRAbstraction
+public class Pool extends Abstraction
 {
 	public static HashMap<Integer, Boolean> pool = null;
 	

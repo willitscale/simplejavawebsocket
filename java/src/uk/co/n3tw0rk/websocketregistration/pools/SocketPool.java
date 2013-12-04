@@ -1,3 +1,3 @@
 package uk.co.n3tw0rk.websocketregistration.pools;
 
-public class WSRThreadPool extends WSRPool{}
+public class SocketPool extends Pool{}

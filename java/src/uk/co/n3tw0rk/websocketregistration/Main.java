@@ -1,15 +1,15 @@
 package uk.co.n3tw0rk.websocketregistration;
 
-import uk.co.n3tw0rk.websocketregistration.threads.WSRSocketServer;
-import uk.co.n3tw0rk.websocketregistration.wrappers.WSRAbstraction;
+import uk.co.n3tw0rk.websocketregistration.threads.SocketServer;
+import uk.co.n3tw0rk.websocketregistration.wrappers.Abstraction;
 
-public class Main extends WSRAbstraction
+public class Main extends Abstraction
 {
 	public Main()
 	{
 		try
 		{
-			( new WSRSocketServer( 8081 ) ).start();
+			( new SocketServer( 8081 ) ).start();
 			this.infinite();
 		}
 		catch( Exception e )

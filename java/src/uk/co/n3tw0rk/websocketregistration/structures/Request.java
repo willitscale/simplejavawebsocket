@@ -1,8 +1,8 @@
 package uk.co.n3tw0rk.websocketregistration.structures;
 
-import uk.co.n3tw0rk.websocketregistration.wrappers.WSRAbstractionStructure;
+import uk.co.n3tw0rk.websocketregistration.wrappers.AbstractionStructure;
 
-public class WSRRequest extends WSRAbstractionStructure
+public class Request extends AbstractionStructure
 {
 	public String acceptEncoding = null;
 	public String acceptLanguage = null;

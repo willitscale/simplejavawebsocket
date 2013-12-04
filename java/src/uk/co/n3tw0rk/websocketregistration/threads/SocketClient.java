@@ -1,19 +1,15 @@
 package uk.co.n3tw0rk.websocketregistration.threads;
 
-import java.io.BufferedReader;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.net.Socket;
 
 import uk.co.n3tw0rk.websocketregistration.framing.DataFrameRequest;
 import uk.co.n3tw0rk.websocketregistration.framing.DataFrameResponse;
-import uk.co.n3tw0rk.websocketregistration.utils.WSRRequestParser;
-import uk.co.n3tw0rk.websocketregistration.utils.WSRUtils;
-import uk.co.n3tw0rk.websocketregistration.wrappers.WSRAbstractionThread;
+import uk.co.n3tw0rk.websocketregistration.utils.RequestParser;
+import uk.co.n3tw0rk.websocketregistration.wrappers.AbstractionThread;
 
-public class WSRSocketClient extends WSRAbstractionThread
+public class SocketClient extends AbstractionThread
 {
 	private Socket socket = null;
 	
@@ -30,7 +26,7 @@ public class WSRSocketClient extends WSRAbstractionThread
 	private DataFrameRequest dataFrameRequest = null;
 	private DataFrameResponse dataFrameResponse = null;
 	
-	public WSRSocketClient( Socket socket )
+	public SocketClient( Socket socket )
 	{
 		this.socket = socket;
 	}
@@ -110,7 +106,7 @@ public class WSRSocketClient extends WSRAbstractionThread
 
 					handler = false;
 
-					this.output = WSRRequestParser.responseHeader( this.input.toString() );
+					this.output = RequestParser.responseHeader( this.input.toString() );
 					this.outputStream.write( this.output );
 					this.outputStream.flush();
 				}

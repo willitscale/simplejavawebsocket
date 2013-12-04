@@ -1,6 +1,6 @@
 package uk.co.n3tw0rk.websocketregistration.framing;
 
-import uk.co.n3tw0rk.websocketregistration.utils.WSRUtils;
+import uk.co.n3tw0rk.websocketregistration.utils.Utils;
 
 public class DataFrameResponse extends DataFrame
 {
@@ -26,7 +26,7 @@ public class DataFrameResponse extends DataFrame
 		this.MASK = ONE_BIT;
 
 		for( int i = 0; i < this.MASKING_KEY.length; i++ )
-			this.MASKING_KEY[ i ] = WSRUtils.generateMaskKeyPart();
+			this.MASKING_KEY[ i ] = Utils.generateMaskKeyPart();
 	}
 
 	public void setPayload( String payload )
@@ -77,6 +77,7 @@ public class DataFrameResponse extends DataFrame
 	public int buildMaskPayloadBytes( int i )
 	{
 		int payload = 0;
+		
 		long extendedPayloadDouble = 0;
 		long extendedPayloadOctal = 0;
 
@@ -84,7 +85,7 @@ public class DataFrameResponse extends DataFrame
 		{
 			payload = ( int ) this.PAYLOAD;
 		}
-		if( MEDIUM_PAYLOAD > this.PAYLOAD )
+		else if( MEDIUM_PAYLOAD >= this.PAYLOAD )
 		{
 			extendedPayloadDouble = this.PAYLOAD;
 			payload = DataFrame.TWO_BYTE_EXTENDED_PAYLOAD;
@@ -97,7 +98,7 @@ public class DataFrameResponse extends DataFrame
 
 		this.dataFrame[ i ] = ( int ) ( this.dataFrame[ i ] | ( this.MASK << 7 ) );
 		this.dataFrame[ i ] = ( int ) ( this.dataFrame[ i++ ] | payload );
-
+		
 		if( 0 < extendedPayloadDouble )
 		{
 			this.dataFrame[ i++ ] = ( int )( ( this.PAYLOAD >> 8 ) & 0xFFL );
@@ -128,7 +129,7 @@ public class DataFrameResponse extends DataFrame
 	
 	public int buildPayloadDataBytes( int i )
 	{
-		byte[] payloadData = WSRUtils.stringConvert( this.payloadData.toString() );
+		byte[] payloadData = Utils.stringConvert( this.payloadData.toString() );
 
 		for( int j = 0; j < payloadData.length; j++ )
 			this.dataFrame[ i++ ] = this.mask( payloadData[ j ], j );
@@ -138,23 +139,19 @@ public class DataFrameResponse extends DataFrame
 	
 	public int buildPacketLength()
 	{
-		int dataFrameLength = 2 + ( int ) this.PAYLOAD;
+		int dataFrameLength = 2;
 
 		if( SMALL_PAYLOAD >= this.PAYLOAD ){}
-		if( MEDIUM_PAYLOAD > this.PAYLOAD )
-		{
+		else if( MEDIUM_PAYLOAD > this.PAYLOAD )
 			dataFrameLength += 2;
-		}
 		else
-		{
 			dataFrameLength += 8;
-		}
+		
+		dataFrameLength += ( int ) this.PAYLOAD;
 		
 		if( ONE_BIT == this.MASK )
-		{
 			dataFrameLength += 4;
-		}
-		
+
 		return dataFrameLength;
 	}
 	

@@ -6,14 +6,14 @@ import java.security.NoSuchAlgorithmException;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.StringUtils;
 
-import uk.co.n3tw0rk.websocketregistration.config.WSRConfig;
-import uk.co.n3tw0rk.websocketregistration.wrappers.WSRAbstraction;
+import uk.co.n3tw0rk.websocketregistration.config.Config;
+import uk.co.n3tw0rk.websocketregistration.wrappers.Abstraction;
 
-public class WSRUtils extends WSRAbstraction
+public class Utils extends Abstraction
 {
 	public static String generateKey( String clientKey )
 	{
-		byte [] keyHash = sha1( clientKey + WSRConfig.SERVER_KEY );
+		byte [] keyHash = sha1( clientKey + Config.SERVER_KEY );
 		
 		return base64Encode( keyHash );
 	}

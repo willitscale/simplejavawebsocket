@@ -1,18 +1,18 @@
 package uk.co.n3tw0rk.websocketregistration.utils;
 
-import uk.co.n3tw0rk.websocketregistration.structures.WSRRequest;
-import uk.co.n3tw0rk.websocketregistration.wrappers.WSRAbstractionStatic;
+import uk.co.n3tw0rk.websocketregistration.structures.Request;
+import uk.co.n3tw0rk.websocketregistration.wrappers.AbstractionStatic;
 
-public class WSRRequestParser extends WSRAbstractionStatic
+public class RequestParser extends AbstractionStatic
 {
 	public static byte[] responseHeader( String request )
 	{
 		return buildResponse( parseRequest( request ) );
 	}
 	
-	public static WSRRequest parseRequest( String request )
+	public static Request parseRequest( String request )
 	{
-		WSRRequest wsrRequest = new WSRRequest();
+		Request wsrRequest = new Request();
 
 		console( request );
 		
@@ -39,16 +39,16 @@ public class WSRRequestParser extends WSRAbstractionStatic
 		return wsrRequest;
 	}
 	
-	public static byte[] buildResponse( WSRRequest wsrRequest )
+	public static byte[] buildResponse( Request wsrRequest )
 	{
 		String response = "HTTP/1.1 101 WebSocket Protocol Handshake\r\n" +
 				"Upgrade: WebSocket\r\n" +
 				"Connection: Upgrade\r\n" +
 				"Sec-WebSocket-Origin: " + wsrRequest.origin + "\r\n" +
 				"Sec-WebSocket-Location: " + wsrRequest.host + "\r\n" +
-				"Sec-WebSocket-Accept: " + WSRUtils.generateKey( wsrRequest.socketKey ) + "\r\n" +
-				"\r\n" + WSRUtils.generateKey( wsrRequest.socketKey );
+				"Sec-WebSocket-Accept: " + Utils.generateKey( wsrRequest.socketKey ) + "\r\n" +
+				"\r\n" + Utils.generateKey( wsrRequest.socketKey );
 		
-		return WSRUtils.stringConvert( response );
+		return Utils.stringConvert( response );
 	}
 }

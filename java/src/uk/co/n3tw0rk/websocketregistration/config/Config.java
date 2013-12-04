@@ -1,8 +1,8 @@
 package uk.co.n3tw0rk.websocketregistration.config;
 
-import uk.co.n3tw0rk.websocketregistration.wrappers.WSRAbstraction;
+import uk.co.n3tw0rk.websocketregistration.wrappers.Abstraction;
 
-public class WSRConfig extends WSRAbstraction
+public class Config extends Abstraction
 {
 	/**
 	 * 

@@ -1,6 +1,6 @@
 package uk.co.n3tw0rk.websocketregistration.framing;
 
-import uk.co.n3tw0rk.websocketregistration.wrappers.WSRAbstraction;
+import uk.co.n3tw0rk.websocketregistration.wrappers.Abstraction;
 
 /**
  * Data Frame
@@ -47,12 +47,17 @@ import uk.co.n3tw0rk.websocketregistration.wrappers.WSRAbstraction;
  * @author James Lockhart <james@n3tw0rk.co.uk>
  * @see http://tools.ietf.org/html/rfc6455#section-5.2
  */
-public abstract class DataFrame extends WSRAbstraction
+public abstract class DataFrame extends Abstraction
 {
 	/**
-	 * To Do : 
+	 * To Do :
+	 *  
 	 * 		-	Fragment Data Frames
+	 * @see http://tools.ietf.org/html/rfc6455#section-5.4
+	 *  
 	 * 		-	Leave extensibility for additional operations
+	 * @see http://tools.ietf.org/html/rfc6455#section-5.5
+	 * @see http://tools.ietf.org/html/rfc6455#section-5.8
 	 */
 
 	public final static int NULL_BIT = 0x0;
