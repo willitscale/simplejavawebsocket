@@ -224,6 +224,11 @@ public abstract class DataFrame extends Abstraction
 		return this.OP_CODE;
 	}
 
+	public boolean isMasked()
+	{
+		return( DataFrame.ONE_BIT == this.MASK );
+	}
+	
 	public String getPayload()
 	{
 		if( null == this.payloadData )

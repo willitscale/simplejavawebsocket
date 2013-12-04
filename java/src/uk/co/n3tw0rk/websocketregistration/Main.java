@@ -1,5 +1,6 @@
 package uk.co.n3tw0rk.websocketregistration;
 
+import uk.co.n3tw0rk.websocketregistration.framing.DataFrameRequest;
 import uk.co.n3tw0rk.websocketregistration.threads.SocketServer;
 import uk.co.n3tw0rk.websocketregistration.wrappers.Abstraction;
 

@@ -28,25 +28,27 @@ SocketClient.prototype.bindListeners = function()
 {
 	var handler = this;
 
-	this.webSocket.onopen = function (event)
+	this.webSocket.onopen = function (e)
 	{
-		console.log( event );
+		console.log( e );
 		handler.send( 'test' );
 	};
 	
-	this.webSocket.onmessage = function( event )
+	this.webSocket.onmessage = function( e )
 	{
-		console.log( event );
+		console.log( e );
 	};
 	
-	this.webSocket.onclose = function( event )
+	this.webSocket.onclose = function( e )
 	{
-		console.log( event );
+		console.log("closed - code " + e.code + ", reason " + e.reason);
+		console.log( e );
 	};
 	
-	this.webSocket.error = function( event )
+	this.webSocket.error = function( e )
 	{
-		console.log( event );
+		console.log("closed - code " + e.code + ", reason " + e.reason);
+		console.log( e );
 	};
 };
 

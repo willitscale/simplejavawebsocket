@@ -1,5 +1,6 @@
 package uk.co.n3tw0rk.websocketregistration.utils;
 
+import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -71,7 +72,7 @@ public class Utils extends Abstraction
 	
 	public static byte[] stringConvert( String s )
 	{
-		return s.getBytes();
+		return s.getBytes( Charset.forName( "UTF-8" ) );
 	}
 
 	public static int generateMaskKeyPart()

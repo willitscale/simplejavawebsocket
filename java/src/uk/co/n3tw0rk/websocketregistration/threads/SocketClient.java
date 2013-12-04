@@ -3,6 +3,8 @@ package uk.co.n3tw0rk.websocketregistration.threads;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 
 import uk.co.n3tw0rk.websocketregistration.framing.DataFrameRequest;
 import uk.co.n3tw0rk.websocketregistration.framing.DataFrameResponse;
@@ -82,19 +84,16 @@ public class SocketClient extends AbstractionThread
 
 				if( !handler )
 				{
-
-					console( "Payload : " + this.dataFrameRequest.getPayload() );
-					console( "OP : " + this.dataFrameRequest.getOPCode() );
-					
 					this.dataFrameResponse.setPayload( this.dataFrameRequest.getPayload(), this.dataFrameRequest.getOPCode() );
 	
-					int[] byteData = this.dataFrameResponse.getDataFrame();
-					for( int i = 0; i < byteData.length; i++ )
+					IntBuffer intBuffer = this.dataFrameResponse.getDataFrame();
+					
+					for( int i = 0; i < intBuffer.limit(); i++ )
 					{
-						console( " >> " + byteData[ i ] );
-						this.outputStream.write( byteData[ i ] );
+						console( " >> " + intBuffer.get( i ) );
+						this.outputStream.write( intBuffer.get( i ) );
 					}
-	
+
 					this.outputStream.flush();
 
 				}
