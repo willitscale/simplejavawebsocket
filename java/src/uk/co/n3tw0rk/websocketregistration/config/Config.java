@@ -39,4 +39,11 @@ public class Config extends Abstraction
 	 * @static
 	 */
 	public static long SLEEP_DELAY = 100000L;
+
+	/**
+	 * @access public
+	 * @var int
+	 * @static
+	 */
+	public static int SERVER_SOCKET = 8081;
 }

@@ -30,7 +30,7 @@ public class Main extends Abstraction
 	{
 		try
 		{
-			( new WebSocketServer( 8081 ) ).start();
+			( new WebSocketServer( Config.SERVER_SOCKET ) ).start();
 			this.infinite();
 		}
 		catch( Exception e )
