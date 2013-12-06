@@ -12,7 +12,7 @@ import uk.co.n3tw0rk.websocketregistration.exceptions.SocketServerException;
  * @access public
  * @author James Lockhart <james@n3tw0rk.co.uk>
  */
-public class SecureWebSocketServer extends WebSocketServer
+public class SSLWebSocketServer extends WebSocketServer
 {
 
 	/**
@@ -24,7 +24,7 @@ public class SecureWebSocketServer extends WebSocketServer
 	 * @throws SocketServerException
 	 * @throws IOException
 	 */
-	public SecureWebSocketServer( int port )
+	public SSLWebSocketServer( int port )
 		throws SocketServerException, IOException
 	{
 		super( port );
