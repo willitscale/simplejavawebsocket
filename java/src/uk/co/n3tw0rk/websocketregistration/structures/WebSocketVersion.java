@@ -12,6 +12,9 @@ public class WebSocketVersion
 	{
 		ByteBuffer byteBuffer = this.response.process( this.request );
 		
+		if( null == byteBuffer )
+			return null;
+		
 		byte[] bytes = new byte[ byteBuffer.limit() ];
 
 		for( int i = 0; i < byteBuffer.limit(); i++ )

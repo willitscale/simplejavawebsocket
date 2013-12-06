@@ -79,9 +79,20 @@ public class WebSocketClient extends AbstractionThread
 
 				if( this.handshakeComplete() )
 				{
-					this.outputStream.write( this.webSocketVersion.process() );
+					byte[] buffer = this.webSocketVersion.process();
+
+					if( null != buffer )
+					{
+						this.outputStream.write( buffer );
+						this.outputStream.flush();
+					}
 					
-					this.outputStream.flush();
+					if( this.webSocketVersion.response.isClosed() )
+					{
+						console( "Websocket Closed" );
+						this.listen = false;
+						break reset;
+					}
 				}
 				else
 				{
@@ -93,9 +104,11 @@ public class WebSocketClient extends AbstractionThread
 
 					this.output = this.webSocketVersion.handshake.getResponse();
 
-					this.outputStream.write( this.output );
-
-					this.outputStream.flush();
+					if( null != this.output )
+					{
+						this.outputStream.write( this.output );
+						this.outputStream.flush();
+					}
 
 					this.input = null;
 					

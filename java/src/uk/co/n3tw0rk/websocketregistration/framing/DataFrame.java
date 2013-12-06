@@ -17,6 +17,7 @@ public interface DataFrame
 	public final static int ONE_BIT = 0x1;
 	public final static int FOUR_BITS = 0xF;
 	public final static int SEVEN_BITS = 0x7F;
+	public final static int ONE_BYTE = 0xFF;
 	
 
 	public boolean isFinal();

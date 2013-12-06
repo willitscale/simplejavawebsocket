@@ -15,14 +15,14 @@ public class RFC6455_Request extends Request
 	public void setData( int data )
 	{
 		console( "<< " + data );
-		
 		this.dataFrame.setFrameData( data );
 	}
 
 	@Override
 	public void flush()
 	{
-		this.dataFrame = new RFC6455_DataFrameRequest();
+		if( null == this.dataFrame || this.dataFrame.isFinal() )
+			this.dataFrame = new RFC6455_DataFrameRequest();
 	}
 
 }

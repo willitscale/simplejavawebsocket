@@ -1,7 +1,7 @@
 package uk.co.n3tw0rk.websocketregistration.framing.rfc6455;
 
 import uk.co.n3tw0rk.websocketregistration.framing.DataFrame;
-
+import uk.co.n3tw0rk.websocketregistration.utils.Utils;
 import uk.co.n3tw0rk.websocketregistration.wrappers.Abstraction;
 
 /**
@@ -51,17 +51,6 @@ import uk.co.n3tw0rk.websocketregistration.wrappers.Abstraction;
  */
 public abstract class RFC6455_DataFrame extends Abstraction implements DataFrame 
 {
-	/**
-	 * To Do :
-	 *  
-	 * 		-	Fragment Data Frames
-	 * @see http://tools.ietf.org/html/rfc6455#section-5.4
-	 *  
-	 * 		-	Leave extensibility for additional operations
-	 * @see http://tools.ietf.org/html/rfc6455#section-5.5
-	 * @see http://tools.ietf.org/html/rfc6455#section-5.8
-	 */
-
 
 	/**
 	 *
@@ -102,7 +91,7 @@ public abstract class RFC6455_DataFrame extends Abstraction implements DataFrame
 	 *		zero, in which case the payload length is the length of the
 	 *		"Application data".
 	 */
-	protected long PAYLOAD;
+	protected long PAYLOAD = DataFrame.NULL_BIT;
 
 	/**
 	 *	FIN:  1 bit
@@ -110,7 +99,7 @@ public abstract class RFC6455_DataFrame extends Abstraction implements DataFrame
 	 *		Indicates that this is the final fragment in a message.  
 	 *		The first fragment MAY also be the final fragment.
 	 */
-	protected byte FIN;
+	protected byte FIN = DataFrame.NULL_BIT;
 	
 	/**
 	 *	RSV1, RSV2, RSV3:  1 bit each
@@ -121,9 +110,9 @@ public abstract class RFC6455_DataFrame extends Abstraction implements DataFrame
 	 *		value, the receiving endpoint MUST _Fail the WebSocket
 	 *		Connection_.
 	 */
-	protected byte RSV1;
-	protected byte RSV2;
-	protected byte RSV3;
+	protected byte RSV1 = DataFrame.NULL_BIT;
+	protected byte RSV2 = DataFrame.NULL_BIT;
+	protected byte RSV3 = DataFrame.NULL_BIT;
 
 	/**
 	 *	Opcode:  4 bits
@@ -140,9 +129,9 @@ public abstract class RFC6455_DataFrame extends Abstraction implements DataFrame
 	 *			%xA denotes a pong
 	 *			%xB-F are reserved for further control frames
 	 */
-	protected byte OP_CODE;
+	protected byte OP_CODE = DataFrame.NULL_BIT;
 
-	public final static byte OP_CODE_CONTINUATION_FRAME = 0x01;
+	public final static byte OP_CODE_CONTINUATION_FRAME = 0x00;
 	public final static byte OP_CODE_TEXT = 0x01;
 	public final static byte OP_CODE_BINARY = 0x02;
 
@@ -171,7 +160,7 @@ public abstract class RFC6455_DataFrame extends Abstraction implements DataFrame
 	 * 		the "Payload data" as per Section 5.3.  All frames sent from
 	 * 		client to server have this bit set to 1.
 	 */
-	protected byte MASK;
+	protected byte MASK = DataFrame.NULL_BIT;
 	
 	/**
 	 *	Masking-key:  0 or 4 bytes
@@ -209,22 +198,235 @@ public abstract class RFC6455_DataFrame extends Abstraction implements DataFrame
 	 *		data".
 	 */
 	protected StringBuilder payloadData = null;
+	
+	/**
+	 * 	Defined Status Codes
+	 *		Endpoints MAY use the following pre-defined status codes when sending
+	 *		a Close frame.
+	 *
+	 * @access protected
+	 * @var int
+	 */
+	protected int STATUS_CODE = DataFrame.NULL_BIT;
+	
+	/**
+	 *	Status Code : 1000
+	 *		1000 indicates a normal closure, meaning that the purpose for
+	 *		which the connection was established has been fulfilled.
+	 *
+	 * @access public
+	 * @var int
+	 * @static
+	 */
+	public final static int STATUS_CODE_NORMAL_CLOSURE = 0x03E8;
+
+	/**
+	 *	Status Code : 1001
+	 *		1001 indicates that an endpoint is "going away", such as a server
+	 *		going down or a browser having navigated away from a page.
+	 *
+	 * @access public
+	 * @var int
+	 * @static
+	 */
+	public final static int STATUS_CODE_GOING_AWAY = 0x03E9;
+
+	/**
+	 *	Status Code : 1002
+	 *		1002 indicates that an endpoint is terminating the connection due
+	 *		to a protocol error.
+	 *
+	 * @access public
+	 * @var int
+	 * @static
+	 */
+	public final static int STATUS_CODE_PROTOCOL_ERROR = 0x03EA;
+	
+	/**
+	 *	Status Code : 1003
+	 *		1003 indicates that an endpoint is terminating the connection
+	 *		because it has received a type of data it cannot accept (e.g., an
+	 *		endpoint that understands only text data MAY send this if it
+	 *		receives a binary message).
+	 *
+	 * @access public
+	 * @var int
+	 * @static
+	 */
+	public final static int STATUS_CODE_INVALID_DATA_TYPE = 0x03EB;
+
+	/**
+	 *	Status Code : 1004
+	 * 		Reserved.  The specific meaning might be defined in the future.
+	 *
+	 * @access public
+	 * @var int
+	 * @static
+	 */
+	public final static int STATUS_CODE_RESERVED_1 = 0x03EC;
+
+	/**
+	 *	Status Code : 1005
+	 *		1005 is a reserved value and MUST NOT be set as a status code in a
+	 *		Close control frame by an endpoint.  It is designated for use in
+	 *		applications expecting a status code to indicate that no status
+	 *		code was actually present.
+	 *
+	 * @access public
+	 * @var int
+	 * @static
+	 */
+	public final static int STATUS_CODE_RESERVED_2 = 0x03ED;
+	
+	/**
+	 *	Status Code : 1006
+	 *		1006 is a reserved value and MUST NOT be set as a status code in a
+	 *		Close control frame by an endpoint.  It is designated for use in
+	 *		applications expecting a status code to indicate that the
+	 *		connection was closed abnormally, e.g., without sending or
+	 *		receiving a Close control frame.
+	 *
+	 * @access public
+	 * @var int
+	 * @static
+	 */
+	public final static int STATUS_CODE_RESERVED_3 = 0x03EE;
+	
+	/**
+	 *	Status Code : 1007
+	 *		1007 indicates that an endpoint is terminating the connection
+	 *		because it has received data within a message that was not
+	 *		consistent with the type of the message (e.g., non-UTF-8 [RFC3629]
+	 *		data within a text message).
+	 *
+	 * @access public
+	 * @var int
+	 * @static
+	 * @see http://tools.ietf.org/html/rfc3629
+	 */
+	public final static int STATUS_CODE_INCONSISTENT_DATA = 0x03EF;
+	
+	/**
+	 *	Status Code : 1008
+	 *		1008 indicates that an endpoint is terminating the connection
+	 *		because it has received a message that violates its policy.  This
+	 *		is a generic status code that can be returned when there is no
+	 *		other more suitable status code (e.g., 1003 or 1009) or if there
+	 *		is a need to hide specific details about the policy.
+	 *
+	 * @access public
+	 * @var int
+	 * @static
+	 */
+	public final static int STATUS_CODE_POLICY_VIOLATION = 0x03F0;
+
+	/**
+	 *	Status Code : 1009
+	 *		1009 indicates that an endpoint is terminating the connection
+	 *		because it has received a message that is too big for it to
+	 *		process.
+	 *
+	 * @access public
+	 * @var int
+	 * @static
+	 */
+	public final static int STATUS_CODE_MESSAGE_TOO_BIG = 0x03F1;
+
+	/**
+	 *  Status Code : 1010
+	 *		1010 indicates that an endpoint (client) is terminating the
+	 *		connection because it has expected the server to negotiate one or
+	 *		more extension, but the server didn't return them in the response
+	 *		message of the WebSocket handshake.  The list of extensions that
+	 *
+	 * @access public
+	 * @var int
+	 * @static
+	 */
+	public final static int STATUS_CODE_INVALID_DATA_HANDSHAKE = 0x03F2;
+	
+	/**
+	 * Payload Data Bytes attribute
+	 * 
+	 * @access protected
+	 * @var byte[]
+	 */
+	protected byte[] payloadDataBytes;
 
 	public RFC6455_DataFrame(){}
 
+	public void setFinal( byte fin )
+	{
+		this.FIN = fin;
+	}
+	
 	public boolean isFinal()
 	{
 		return ( 0x1 == this.FIN );
 	}
 
+	public void setOPCode( byte opcode )
+	{
+		this.OP_CODE = opcode;
+	}
+	
 	public byte getOPCode()
 	{
 		return this.OP_CODE;
 	}
 
+	public void setStatusCode( int statusCode )
+	{
+		this.STATUS_CODE = statusCode;
+	}
+	
+	public int getStatusCode()
+	{
+		return this.STATUS_CODE;
+	}
+	
+	public void setMasked( boolean masked )
+	{
+		this.MASK = ( byte ) ( ( masked ) ? RFC6455_DataFrame.ONE_BIT :
+			RFC6455_DataFrame.NULL_BIT );
+	}
+
 	public boolean isMasked()
 	{
 		return( RFC6455_DataFrame.ONE_BIT == this.MASK );
+	}
+
+	/**
+	 * Set Payload Method
+	 * 
+	 * @access public
+	 * @param String payload
+	 * @param byte op
+	 * @return void
+	 */
+	public void setPayload( String payloadData )
+	{
+		this.payloadDataBytes = Utils.stringConvert( payloadData );
+
+		int extraPayload = ( DataFrame.NULL_BIT != this.getStatusCode() ) ? 2 : 0;
+
+		this.PAYLOAD = this.payloadDataBytes.length + extraPayload;
+
+		// Prefix the status code to the payload
+		if( 2 == extraPayload )
+		{
+			byte[] tmpPayload = new byte[ ( int ) this.PAYLOAD ];
+			
+			tmpPayload[ 0 ] = ( byte ) ( ( this.getStatusCode() >> 8 ) & DataFrame.ONE_BYTE );
+			tmpPayload[ 1 ] = ( byte ) ( this.getStatusCode() & DataFrame.ONE_BYTE );
+
+			for( int i = 2; i < this.PAYLOAD; i++ )
+			{
+				tmpPayload[ i ] = this.payloadDataBytes[ i - 2 ];
+			}
+			
+			this.payloadDataBytes = tmpPayload;
+		}
 	}
 	
 	public String getPayload()

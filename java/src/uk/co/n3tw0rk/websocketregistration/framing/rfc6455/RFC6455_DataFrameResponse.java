@@ -36,14 +36,6 @@ public class RFC6455_DataFrameResponse extends RFC6455_DataFrame implements Data
 	 * @var int
 	 */
 	private final static int MAX_HEADER = 14;
-	
-	/**
-	 * Payload Data Bytes attribute
-	 * 
-	 * @access private
-	 * @var byte[]
-	 */
-	private byte[] payloadDataBytes;
 
 	/**
 	 * Byte Buffer attribute
@@ -110,35 +102,6 @@ public class RFC6455_DataFrameResponse extends RFC6455_DataFrame implements Data
 		this.RSV1 = ( byte ) DataFrame.NULL_BIT;
 		this.RSV2 = ( byte ) DataFrame.NULL_BIT;
 		this.RSV3 = ( byte ) DataFrame.NULL_BIT;
-	}
-
-	/**
-	 * Set Payload Method
-	 * 
-	 * @access public
-	 * @param String payload
-	 * @return void
-	 */
-	public void setPayload( String payload )
-	{
-		this.setPayload( payload, OP_CODE_TEXT );
-	}
-
-	/**
-	 * Set Payload Method
-	 * 
-	 * @access public
-	 * @param String payload
-	 * @param byte op
-	 * @return void
-	 */
-	public void setPayload( String payloadData, byte op )
-	{
-		this.payloadDataBytes = Utils.stringConvert( payloadData );
-
-		this.PAYLOAD = this.payloadDataBytes.length;
-
-		this.OP_CODE = op;
 	}
 
 	/**
@@ -209,8 +172,8 @@ public class RFC6455_DataFrameResponse extends RFC6455_DataFrame implements Data
 			tmpByte |= ( byte ) RFC6455_DataFrame.TWO_BYTE_EXTENDED_PAYLOAD;
 			
 			this.putByte( tmpByte );
-			this.putByte( ( int )( ( this.PAYLOAD >> 8 ) & 0xFF ) );
-			this.putByte( ( int )( this.PAYLOAD & 0xFF ) );
+			this.putByte( ( int )( ( this.PAYLOAD >> 8 ) & DataFrame.ONE_BYTE ) );
+			this.putByte( ( int )( this.PAYLOAD & DataFrame.ONE_BYTE ) );
 		}
 		else if( MEDIUM_PAYLOAD < this.PAYLOAD )
 		{
@@ -218,14 +181,14 @@ public class RFC6455_DataFrameResponse extends RFC6455_DataFrame implements Data
 			
 			this.putByte( tmpByte );
 			
-			this.putByte( ( int )( ( this.PAYLOAD >> 56 ) & 0xFF ) );
-			this.putByte( ( int )( ( this.PAYLOAD >> 48 ) & 0xFF ) );
-			this.putByte( ( int )( ( this.PAYLOAD >> 40 ) & 0xFF ) );
-			this.putByte( ( int )( ( this.PAYLOAD >> 32 ) & 0xFF ) );
-			this.putByte( ( int )( ( this.PAYLOAD >> 24 ) & 0xFF ) );
-			this.putByte( ( int )( ( this.PAYLOAD >> 16 ) & 0xFF ) );
-			this.putByte( ( int )( ( this.PAYLOAD >> 8 ) & 0xFF ) );
-			this.putByte( ( int )( this.PAYLOAD & 0xFF ) );
+			this.putByte( ( int )( ( this.PAYLOAD >> 56 ) & DataFrame.ONE_BYTE ) );
+			this.putByte( ( int )( ( this.PAYLOAD >> 48 ) & DataFrame.ONE_BYTE ) );
+			this.putByte( ( int )( ( this.PAYLOAD >> 40 ) & DataFrame.ONE_BYTE ) );
+			this.putByte( ( int )( ( this.PAYLOAD >> 32 ) & DataFrame.ONE_BYTE ) );
+			this.putByte( ( int )( ( this.PAYLOAD >> 24 ) & DataFrame.ONE_BYTE ) );
+			this.putByte( ( int )( ( this.PAYLOAD >> 16 ) & DataFrame.ONE_BYTE ) );
+			this.putByte( ( int )( ( this.PAYLOAD >> 8 ) & DataFrame.ONE_BYTE ) );
+			this.putByte( ( int )( this.PAYLOAD & DataFrame.ONE_BYTE ) );
 		}
 		else
 		{
@@ -273,5 +236,4 @@ public class RFC6455_DataFrameResponse extends RFC6455_DataFrame implements Data
 
 		this.byteBuffer.put( ( byte ) tmpByte );
 	}
-
 }

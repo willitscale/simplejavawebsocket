@@ -7,8 +7,11 @@ import uk.co.n3tw0rk.websocketregistration.wrappers.Abstraction;
 
 public abstract class Response extends Abstraction
 {
+	protected boolean closedSent = false;
+
 	protected DataFrameResponse dataFrameResponse;
 	
 	public abstract ByteBuffer process( Request request );
 
+	public abstract boolean isClosed();
 }
