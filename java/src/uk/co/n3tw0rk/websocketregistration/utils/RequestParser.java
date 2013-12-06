@@ -44,10 +44,9 @@ public class RequestParser extends AbstractionStatic
 		String response = "HTTP/1.1 101 WebSocket Protocol Handshake\r\n" +
 				"Upgrade: WebSocket\r\n" +
 				"Connection: Upgrade\r\n" +
-				"Sec-WebSocket-Origin: " + wsrRequest.origin + "\r\n" +
-				"Sec-WebSocket-Location: " + wsrRequest.host + "\r\n" +
-				"Sec-WebSocket-Accept: " + Utils.generateKey( wsrRequest.socketKey ) + "\r\n" +
-				"\r\n" + Utils.generateKey( wsrRequest.socketKey );
+				//"Sec-WebSocket-Origin: " + wsrRequest.origin + "\r\n" +
+				//"Sec-WebSocket-Location: " + wsrRequest.host + "\r\n" +
+				"Sec-WebSocket-Accept: " + Utils.generateKey( wsrRequest.socketKey ) + "\r\n\r\n";
 		
 		return Utils.stringConvert( response );
 	}

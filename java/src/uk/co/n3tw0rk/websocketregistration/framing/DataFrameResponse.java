@@ -34,7 +34,7 @@ public class DataFrameResponse extends DataFrame
 	 * @access private
 	 * @var int
 	 */
-	private final static int MAX_HEADER = 14;
+	private final static int MAX_HEADER = 28;
 	
 	/**
 	 * Payload Data Bytes attribute
@@ -62,7 +62,27 @@ public class DataFrameResponse extends DataFrame
 	{
 		this.payloadData = new StringBuilder();
 		this.setBaseData();
-		this.generateMaskingKey();
+	}
+
+	/**
+	 * Generate Masking Key Method
+	 * 
+	 * @access private
+	 * @return void
+	 */
+	public void setMasking( boolean mask )
+	{
+		if( mask )
+		{
+			this.MASK = DataFrame.ONE_BIT;
+
+			for( int i = 0; i < this.MASKING_KEY.length; i++ )
+				this.MASKING_KEY[ i ] = Utils.generateMaskKeyPart();
+		}
+		else
+		{
+			this.MASK = DataFrame.NULL_BIT;
+		}
 	}
 	
 	/**
@@ -89,20 +109,6 @@ public class DataFrameResponse extends DataFrame
 		this.RSV1 = ( byte ) DataFrame.NULL_BIT;
 		this.RSV2 = ( byte ) DataFrame.NULL_BIT;
 		this.RSV3 = ( byte ) DataFrame.NULL_BIT;
-	}
-
-	/**
-	 * Generate Masking Key Method
-	 * 
-	 * @access private
-	 * @return void
-	 */
-	private void generateMaskingKey()
-	{
-		this.MASK = ONE_BIT;
-
-		for( int i = 0; i < this.MASKING_KEY.length; i++ )
-			this.MASKING_KEY[ i ] = Utils.generateMaskKeyPart();
 	}
 
 	/**
@@ -176,11 +182,11 @@ public class DataFrameResponse extends DataFrame
 	{
 		int tmpByte = 0x0;
 
-		tmpByte |= ( int ) ( this.FIN << 7 );
-		tmpByte |= ( int ) ( this.RSV1 << 6 );
-		tmpByte |= ( int ) ( this.RSV2 << 5 );
-		tmpByte |= ( int ) ( this.RSV3 << 4 );
-		tmpByte |= ( int ) this.OP_CODE;
+		tmpByte |= ( byte ) ( this.FIN << 7 );
+		tmpByte |= ( byte ) ( this.RSV1 << 6 );
+		tmpByte |= ( byte ) ( this.RSV2 << 5 );
+		tmpByte |= ( byte ) ( this.RSV3 << 4 );
+		tmpByte |= ( byte ) this.OP_CODE;
 
 		this.putByte( tmpByte );
 	}
@@ -193,13 +199,13 @@ public class DataFrameResponse extends DataFrame
 	 */
 	private void buildMaskPayloadBytes()
 	{
-		int tmpByte = 0x0;
+		byte tmpByte = 0x0;
 
-		tmpByte = ( int ) ( tmpByte | ( this.MASK << 7 ) );
+		tmpByte = ( byte ) ( tmpByte | ( this.MASK << 7 ) );
 		
 		if( SMALL_PAYLOAD < this.PAYLOAD )
 		{
-			tmpByte |= ( int ) DataFrame.TWO_BYTE_EXTENDED_PAYLOAD;
+			tmpByte |= ( byte ) DataFrame.TWO_BYTE_EXTENDED_PAYLOAD;
 			
 			this.putByte( tmpByte );
 			this.putByte( ( int )( ( this.PAYLOAD >> 8 ) & 0xFF ) );
@@ -207,7 +213,7 @@ public class DataFrameResponse extends DataFrame
 		}
 		else if( MEDIUM_PAYLOAD < this.PAYLOAD )
 		{
-			tmpByte |= ( int ) DataFrame.EIGHT_BYTE_EXTENDED_PAYLOAD;
+			tmpByte |= ( byte ) DataFrame.EIGHT_BYTE_EXTENDED_PAYLOAD;
 			
 			this.putByte( tmpByte );
 			
@@ -222,16 +228,16 @@ public class DataFrameResponse extends DataFrame
 		}
 		else
 		{
-			tmpByte |= ( int ) this.PAYLOAD;
+			tmpByte |= ( byte ) this.PAYLOAD;
 			this.putByte( tmpByte );
 		}
 
 		if( ONE_BIT == this.MASK )
 		{
-			this.putByte( ( int ) this.MASKING_KEY[ 0 ] );
-			this.putByte( ( int ) this.MASKING_KEY[ 1 ] );
-			this.putByte( ( int ) this.MASKING_KEY[ 2 ] );
-			this.putByte( ( int ) this.MASKING_KEY[ 3 ] );
+			this.putByte( this.MASKING_KEY[ 0 ] );
+			this.putByte( this.MASKING_KEY[ 1 ] );
+			this.putByte( this.MASKING_KEY[ 2 ] );
+			this.putByte( this.MASKING_KEY[ 3 ] );
 		}
 
 	}
@@ -247,7 +253,7 @@ public class DataFrameResponse extends DataFrame
 		for( int j = 0; j < this.payloadDataBytes.length; j++ )
 		{
 			if( this.isMasked() )
-				this.putByte( ( int ) this.mask( this.payloadDataBytes[ j ], j ) );
+				this.putByte( this.mask( this.payloadDataBytes[ j ], j ) );
 			else
 				this.putByte( this.payloadDataBytes[ j ] );
 		}
@@ -262,9 +268,39 @@ public class DataFrameResponse extends DataFrame
 	 */
 	private void putByte( int tmpByte )
 	{
-		console( ">> " + tmpByte );
+		console( "byte >> " + ( byte ) tmpByte );
 
 		this.byteBuffer.put( ( byte ) tmpByte );
+		
+		/*
+		if( -128 <= tmpByte && 127 >= tmpByte )
+		{
+			console( "byte >> " + tmpByte );
+
+			this.byteBuffer.put( ( byte ) tmpByte );
+		}
+		else if( -32768 <= tmpByte && 32767 >= tmpByte )
+		{
+			console( "short -- byte >> " + tmpByte );
+			console( "short >> " + ( byte ) ( ( tmpByte >> 4 ) & 0xFF ) );
+			console( "short >> " + ( byte ) ( tmpByte & 0xFF ) );
+
+			this.byteBuffer.put( ( byte ) ( ( tmpByte >> 4 ) & 0xFF ) );
+			this.byteBuffer.put( ( byte ) ( tmpByte & 0xFF ) );
+		}
+		else if( -2147483648 <= tmpByte && 2147483647 >= tmpByte )
+		{
+			console( "int" );
+			this.byteBuffer.put( ( byte ) ( ( tmpByte >> 28 ) & 0xFF ) );
+			this.byteBuffer.put( ( byte ) ( ( tmpByte >> 24 ) & 0xFF ) );
+			this.byteBuffer.put( ( byte ) ( ( tmpByte >> 20 ) & 0xFF ) );
+			this.byteBuffer.put( ( byte ) ( ( tmpByte >> 16 ) & 0xFF ) );
+			this.byteBuffer.put( ( byte ) ( ( tmpByte >> 12 ) & 0xFF ) );
+			this.byteBuffer.put( ( byte ) ( ( tmpByte >> 8 ) & 0xFF ) );
+			this.byteBuffer.put( ( byte ) ( ( tmpByte >> 4 ) & 0xFF ) );
+			this.byteBuffer.put( ( byte ) ( tmpByte & 0xFF ) );
+		} */
+
 	}
 
 }

@@ -4,7 +4,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
 
 import uk.co.n3tw0rk.websocketregistration.framing.DataFrameRequest;
 import uk.co.n3tw0rk.websocketregistration.framing.DataFrameResponse;
@@ -72,17 +71,17 @@ public class SocketClient extends AbstractionThread
 						break reset;
 					}
 
-					console( "<< " + this.buffer );
-
 					if( !handler )
+					{
+
+						//console( "<< " + this.buffer );
 						this.dataFrameRequest.setFrameData( this.buffer );
+					}
 					else
 						this.input.append( ( char ) this.buffer );
 					
 				}
 				while( 0 != this.inputStream.available() );
-				
-				System.out.println( "" );
 
 				if( !handler )
 				{
@@ -91,6 +90,7 @@ public class SocketClient extends AbstractionThread
 					ByteBuffer byteBuffer = this.dataFrameResponse.getDataFrame();
 
 					this.outputStream.write( byteBuffer.array(), 0, byteBuffer.limit() );
+					
 					this.outputStream.flush();
 				}
 				else
@@ -105,9 +105,6 @@ public class SocketClient extends AbstractionThread
 					this.outputStream.write( this.output );
 					this.outputStream.flush();
 				}
-				
-				System.out.println( "" );
-
 			}
 			
 			this.inputStream.close();
