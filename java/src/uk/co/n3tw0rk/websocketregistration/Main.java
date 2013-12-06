@@ -24,7 +24,7 @@ public class Main extends Abstraction
 		{
 			try
 			{
-				Thread.sleep( 10000 );
+				Thread.sleep( 100000L );
 			}
 			catch( Exception e )
 			{
