@@ -7,7 +7,7 @@ package uk.co.n3tw0rk.websocketregistration.framing;
  * @package uk.co.n3tw0rk.websocketregistration.framing
  * @version 0.1
  * @access public
- * interface
+ * @interface
  * @author James Lockhart <james@n3tw0rk.co.uk>
  * @see http://tools.ietf.org/html/rfc6455#section-5.2
  */

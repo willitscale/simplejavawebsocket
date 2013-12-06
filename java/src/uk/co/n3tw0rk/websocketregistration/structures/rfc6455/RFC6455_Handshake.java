@@ -8,7 +8,8 @@ import uk.co.n3tw0rk.websocketregistration.utils.Utils;
 
 public class RFC6455_Handshake extends Handshake
 {
-	public RFC6455_Handshake( HashMap<String, String> headers, String uri ) throws HandshakeException
+	public RFC6455_Handshake( HashMap<String, String> headers, String uri )
+		throws HandshakeException
 	{
 		super( headers, uri );
 
@@ -45,7 +46,8 @@ public class RFC6455_Handshake extends Handshake
 		if( this.headers.containsKey( "Host" ) )
 			stringBuilder.append( "Sec-WebSocket-Location: " + this.headers.get( "Host" ) + Handshake.HEADER_EOL );
 
-		stringBuilder.append( "Sec-WebSocket-Accept: " + Utils.generateKey( this.headers.get( "Sec-WebSocket-Key" ) ) + Handshake.HEADER_EOL + Handshake.HEADER_EOL );
+		stringBuilder.append( "Sec-WebSocket-Accept: " + Utils.generateKey( this.headers.get( "Sec-WebSocket-Key" ) ) + 
+			Handshake.HEADER_EOL + Handshake.HEADER_EOL );
 
 		this.response = Utils.stringConvert( stringBuilder.toString() );
 		
@@ -53,7 +55,8 @@ public class RFC6455_Handshake extends Handshake
 	}
 
 	@Override
-	protected void validate() throws HandshakeException
+	protected void validate()
+		throws HandshakeException
 	{
 		if( !this.headers.containsKey( "Sec-WebSocket-Key" ) )
 			throw new HandshakeException();

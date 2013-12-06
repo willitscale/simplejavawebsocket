@@ -15,27 +15,27 @@ public class RFC6455_DataFrameResponse extends RFC6455_DataFrame implements Data
 	 * 
 	 * 	Based off : 
 	 * 
-	 * 		Packet Part				|		Max Size Bits
+	 *      Packet Part             |           Max Size Bits
 	 * 	--------------------------------------------
-	 * 		FIN 					|			1
-	 * 		RSV1 					|			1
-	 * 		RSV2 					|			1
-	 * 		RSV3 					|			1
-	 * 		Opcode 					|			4
-	 * 		Opcode 					|			1
-	 * 		Payload length			|			7
-	 * 		Payload length extended |			64
-	 * 		Masking-key				|			32
+	 *      FIN                     |           1
+	 *      RSV1                    |           1
+	 *      RSV2                    |           1
+	 *      RSV3                    |           1
+	 *      Opcode                  |           4
+	 *      Opcode                  |           1
+	 *      Payload length          |           7
+	 *      Payload length extended |           64
+	 *      Masking-key             |           32
 	 * 	--------------------------------------------
-	 * 		Total Bits 				|			112
-	 * 		Total Bytes				|			14
+	 *      Total Bits 				|			112
+	 *      Total Bytes				|			14
 	 * 
 	 * @final
 	 * @static
 	 * @access private
 	 * @var int
 	 */
-	private final static int MAX_HEADER = 28;
+	private final static int MAX_HEADER = 14;
 	
 	/**
 	 * Payload Data Bytes attribute
