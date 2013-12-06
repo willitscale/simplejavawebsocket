@@ -27,8 +27,8 @@ public class RFC6455_DataFrameResponse extends RFC6455_DataFrame implements Data
 	 *      Payload length extended |           64
 	 *      Masking-key             |           32
 	 * 	--------------------------------------------
-	 *      Total Bits 				|			112
-	 *      Total Bytes				|			14
+	 *      Total Bits              |           112
+	 *      Total Bytes             |           14
 	 * 
 	 * @final
 	 * @static
