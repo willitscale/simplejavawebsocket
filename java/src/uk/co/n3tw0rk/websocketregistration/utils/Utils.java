@@ -14,9 +14,9 @@ public class Utils extends Abstraction
 {
 	public static String generateKey( String clientKey )
 	{
-		byte [] keyHash = sha1( clientKey + Config.SERVER_KEY );
+		byte [] keyHash = Utils.sha1( clientKey + Config.SERVER_KEY );
 		
-		return base64Encode( keyHash );
+		return Utils.base64Encode( keyHash );
 	}
 
 	public static String base64Decode( byte [] s )
@@ -32,7 +32,9 @@ public class Utils extends Abstraction
 	public static byte[] md5( String md5 )
 	{
 		MessageDigest md = null;
+
 		byte bytes[] = md5.getBytes();
+
 		try
 		{
 			md = MessageDigest.getInstance( "MD5" );
@@ -40,7 +42,8 @@ public class Utils extends Abstraction
 		catch( NoSuchAlgorithmException e )
 		{
 			e.printStackTrace();
-		} 
+		}
+
 		return md.digest( bytes );
 	}
 	public static byte[] sha1( String sha1 )

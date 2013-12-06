@@ -1,15 +1,36 @@
 package uk.co.n3tw0rk.websocketregistration;
 
-import uk.co.n3tw0rk.websocketregistration.threads.SocketServer;
+import uk.co.n3tw0rk.websocketregistration.config.Config;
+import uk.co.n3tw0rk.websocketregistration.threads.WebSocketServer;
 import uk.co.n3tw0rk.websocketregistration.wrappers.Abstraction;
 
+/**
+ * Main Object
+ * 
+ * @package uk.co.n3tw0rk.websocketregistration
+ * @version 0.1
+ * @access public
+ * @author James Lockhart <james@n3tw0rk.co.uk>
+ */
 public class Main extends Abstraction
 {
+	/**
+	 * @var boolean
+	 * @access private
+	 */
+	private boolean running = true;
+	
+	/**
+	 * 	Constructor
+	 * 
+	 * @access public
+	 * @constructor
+	 */
 	public Main()
 	{
 		try
 		{
-			( new SocketServer( 8081 ) ).start();
+			( new WebSocketServer( 8081 ) ).start();
 			this.infinite();
 		}
 		catch( Exception e )
@@ -18,13 +39,20 @@ public class Main extends Abstraction
 		}
 	}
 	
+	/**
+	 * 	Infinite Method
+	 * 		Keeps the application running indefinitely
+	 * 
+	 * @access public
+	 * @return void
+	 */
 	public void infinite()
 	{
-		while( true )
+		while( this.running )
 		{
 			try
 			{
-				Thread.sleep( 100000L );
+				Thread.sleep( Config.SLEEP_DELAY );
 			}
 			catch( Exception e )
 			{
@@ -33,9 +61,16 @@ public class Main extends Abstraction
 		}
 	}
 	
+	/**
+	 * Main Method
+	 * 
+	 * @access public
+	 * @static
+	 * @param String[] args
+	 * @return void
+	 */
 	public static void main( String [] args )
 	{
 		new Main();
 	}
-
 }

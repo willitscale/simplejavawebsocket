@@ -3,14 +3,12 @@ package uk.co.n3tw0rk.websocketregistration.threads;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
-import java.nio.ByteBuffer;
 
-import uk.co.n3tw0rk.websocketregistration.framing.DataFrameRequest;
-import uk.co.n3tw0rk.websocketregistration.framing.DataFrameResponse;
-import uk.co.n3tw0rk.websocketregistration.utils.RequestParser;
+import uk.co.n3tw0rk.websocketregistration.factories.WebsocketVersionFactory;
+import uk.co.n3tw0rk.websocketregistration.structures.WebSocketVersion;
 import uk.co.n3tw0rk.websocketregistration.wrappers.AbstractionThread;
 
-public class SocketClient extends AbstractionThread
+public class WebSocketClient extends AbstractionThread
 {
 	private Socket socket = null;
 	
@@ -23,11 +21,10 @@ public class SocketClient extends AbstractionThread
 	private int buffer;
 	
 	private boolean listen = true;
+
+	private WebSocketVersion webSocketVersion;
 	
-	private DataFrameRequest dataFrameRequest = null;
-	private DataFrameResponse dataFrameResponse = null;
-	
-	public SocketClient( Socket socket )
+	public WebSocketClient( Socket socket )
 	{
 		this.socket = socket;
 	}
@@ -36,7 +33,6 @@ public class SocketClient extends AbstractionThread
 	{
 		try
 		{
-			boolean handler = true;
 			console( "Client connected" );
 			
 			this.inputStream = this.socket.getInputStream();
@@ -49,14 +45,8 @@ public class SocketClient extends AbstractionThread
 			{
 
 				// Something has happened to the connection so kill off this connection and thread
-				if( !this.socket.isConnected() || this.socket.isInputShutdown() || this.socket.isOutputShutdown() )
+				if( this.validateConnection() )
 					this.listen = false;
-
-				if( !handler )
-				{
-					this.dataFrameRequest = new DataFrameRequest();
-					this.dataFrameResponse = new DataFrameResponse();
-				}
 
 				do
 				{
@@ -71,25 +61,21 @@ public class SocketClient extends AbstractionThread
 						break reset;
 					}
 
-					if( !handler )
+					if( this.handshakeComplete() )
 					{
-
-						//console( "<< " + this.buffer );
-						this.dataFrameRequest.setFrameData( this.buffer );
+						this.webSocketVersion.request.setData( this.buffer );
 					}
 					else
+					{
 						this.input.append( ( char ) this.buffer );
+					}
 					
 				}
 				while( 0 != this.inputStream.available() );
 
-				if( !handler )
+				if( this.handshakeComplete() )
 				{
-					this.dataFrameResponse.setPayload( this.dataFrameRequest.getPayload(), this.dataFrameRequest.getOPCode() );
-	
-					ByteBuffer byteBuffer = this.dataFrameResponse.getDataFrame();
-
-					this.outputStream.write( byteBuffer.array(), 0, byteBuffer.limit() );
+					this.outputStream.write( this.webSocketVersion.process() );
 					
 					this.outputStream.flush();
 				}
@@ -99,17 +85,19 @@ public class SocketClient extends AbstractionThread
 					if( 0 == this.input.length() )
 						this.listen = false;
 
-					handler = false;
+					this.webSocketVersion = ( new WebsocketVersionFactory( this.input.toString() ) ).getVersion();
 
-					this.output = RequestParser.responseHeader( this.input.toString() );
+					this.output = this.webSocketVersion.handshake.getResponse();
+
 					this.outputStream.write( this.output );
+
 					this.outputStream.flush();
+
+					this.input = null;
+					
+					console( "Handshake Complete" );
 				}
 			}
-			
-			this.inputStream.close();
-			this.outputStream.close();
-			this.socket.close();
 
 			console( "Client disconnected" );
 		}
@@ -117,5 +105,28 @@ public class SocketClient extends AbstractionThread
 		{
 			e.printStackTrace();
 		}
+
+		try
+		{
+			this.inputStream.close();
+
+			this.outputStream.close();
+
+			this.socket.close();
+		}
+		catch( Exception e )
+		{
+			
+		}
+	}
+	
+	public boolean handshakeComplete()
+	{
+		return ( null != this.webSocketVersion && this.webSocketVersion.handshake.isEstablished( ) );
+	}
+	
+	private boolean validateConnection()
+	{
+		return ( !this.socket.isConnected() || this.socket.isInputShutdown() || this.socket.isOutputShutdown() );
 	}
 }
