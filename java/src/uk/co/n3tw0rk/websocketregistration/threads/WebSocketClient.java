@@ -46,7 +46,11 @@ public class WebSocketClient extends AbstractionThread
 
 				// Something has happened to the connection so kill off this connection and thread
 				if( this.validateConnection() )
+				{
+					console( "Websocket Error" );
 					this.listen = false;
+					break reset;
+				}
 
 				do
 				{
@@ -54,7 +58,7 @@ public class WebSocketClient extends AbstractionThread
 					this.buffer = this.inputStream.read();
 
 					// WebSocket Error as all data should be in single singed byte range ( 0 - 255 )
-					if( -1 == this.buffer )
+					if( -1 >= this.buffer || 256 <= this.buffer )
 					{
 						console( "Websocket Error" );
 						this.listen = false;
