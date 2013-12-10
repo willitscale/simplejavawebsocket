@@ -1,6 +1,8 @@
 package uk.co.n3tw0rk.websocketregistration;
 
 import uk.co.n3tw0rk.websocketregistration.config.Config;
+import uk.co.n3tw0rk.websocketregistration.events.EventRegistration;
+import uk.co.n3tw0rk.websocketregistration.threads.SSLWebSocketServer;
 import uk.co.n3tw0rk.websocketregistration.threads.WebSocketServer;
 import uk.co.n3tw0rk.websocketregistration.wrappers.Abstraction;
 
@@ -30,7 +32,7 @@ public class Main extends Abstraction
 	{
 		try
 		{
-			( new WebSocketServer( Config.SERVER_SOCKET ) ).start();
+			( new SSLWebSocketServer( Config.SERVER_SOCKET, new EventRegistration() ) ).start();
 			this.infinite();
 		}
 		catch( Exception e )

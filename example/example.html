@@ -8,7 +8,9 @@
 		<script src="scripts/date.js"></script>
 		<script src="scripts/websocket-registration.js"></script>
 		
-		<link rel="stylesheet" href="styles/example.css">
+		<!-- link rel="stylesheet" href="styles/example.css" -->
+		<link rel="stylesheet" href="styles/default.css">
+		<link rel="stylesheet" href="styles/input-form.css">
 	
 		<script>
 		
@@ -24,49 +26,63 @@
 	</head>
 
 	<body>
+
+		<div class="input-form">
+		
+			<div class="wrapper">
 	
-		<table id="log-table">
-		
-			<thead>
-			
-				<tr>
+				<div class="header">
 				
-					<th>Log</th>
 				
-				</tr>
-			
-			</thead>
-			
-			<tbody>
-		
-			</tbody>
-			
-			<tfoot>
-			
-				<tr>
+					<h1>Simple Java Websocket</h1>
 				
-					<th>
-
-						<input type="text" value="ws://localhost:8081" id="url" /> 
-
-						<input type="button" value="Connect" onclick="socketClient.connectURL( $( '#url' ).val() );" />
-
-						<input type="button" value="Disconnect" onclick="socketClient.disconnect();" />
-
-						<input type="text" value="1234" id="msg" /> 
-
-						<input type="button" value="Send" onclick="socketClient.send( $( '#msg' ).val() );" />
-
-						<input type="button" value="Clear Log" onclick="socketClient.clearLog();" />
-					</th>
+					<div class="header-tail"></div>
+					<div class="header-tail-border"></div>
+					<div class="header-tail-clear"></div>
 				
-				</tr>
+				</div>
 		
-			</tfoot>
+				<h3>Shopping Cart</h3>
+
+				<div class="steps div-table">
+					<div class="div-row">
+						<div class="step-header div-cell">Step :</div>
+						<div class="step-active div-cell">1. Register</div>
+						<div class="div-cell">2. Address</div>
+						<div class="div-cell">3. Payment</div>
+						<div class="div-cell">4. Confirm</div>
+						<div class="div-cell">5. Finished</div>
+					</div>
+				</div>
+
+				<div class="form-fields div-table">
+					<div class="div-row">
+					
+						<div class="div-cell cell-left">
+							<h3>Already Registered?</h3>
+							<input type="text" value="E-Mail Address" class="text-input text-input-email" />
+							<input type="text" value="Password" class="text-input text-input-password" />
+			
+							<input type="button" value="LOGIN" class="button next-button" />
+							<span class="button-spacer"></span>
+						</div>
+
+						<div class="div-cell cell-right">
+							<h3>New Customer?</h3>
+							<input type="text" value="E-Mail Address" class="text-input text-input-email" />
+							<input type="text" value="Repeat E-Mail Address" class="text-input text-input-email text-input-email" />
+							<input type="text" value="Password" class="text-input text-input-password" />
+							<input type="text" value="Repeat Password" class="text-input text-input-password" />
+			
+							<input type="button" value="REGISTER" class="button next-button" />
+							<span class="button-spacer"></span>
+						</div>
+					</div>
+				</div>
 		
-		</table>
-	
-	
+			</div>
+		
+		</div>
 
 	</body>
 

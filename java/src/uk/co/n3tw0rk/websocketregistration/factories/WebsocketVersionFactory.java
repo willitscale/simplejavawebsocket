@@ -30,8 +30,11 @@ public class WebsocketVersionFactory extends Abstraction
 	{
 		this.headers = new HashMap<String, String>();
 
+		console( header );
+		
 		String headerParts [] = header.split( "\r\n" );
 
+		
 		for( int i = 0; i < headerParts.length; i++ )
 		{
 			if( headerParts[ i ].matches( "^GET /([^ ]*) (.*)" ) )

@@ -1,0 +1,235 @@
+
+.input-form
+{
+	position:absolute;
+	
+	left:50%;
+	top:50%;
+	
+	width: 780px;
+	margin-left:-390px;
+	
+	height:464px;
+	margin-top:-232px;
+
+	border: 1px solid #888;
+	border-radius: 7px;
+	background: linear-gradient( #EEE, #CCC );
+	box-shadow: 2px 2px 4px 0px #AAA;
+}
+
+.input-form .wrapper
+{
+	position:relative;
+	padding:30px 40px 70px;
+}
+
+
+.input-form .header
+{
+	position:absolute;
+	
+	top:-42px;
+	left:0px;
+	
+	margin-left:40px;
+	width:340px;
+	height:40px;
+	
+	background: linear-gradient( #4d7bd6 5%, #5689db 100%);
+	border-radius:5px;
+	
+	border-bottom-right-radius: 0px;
+	border-bottom-left-radius: 0px;
+	
+	border: 1px solid #333;
+	border-bottom:0px;
+}
+
+.input-form .header h1
+{
+	padding:5px 0px;
+	margin:0px;
+	
+	color: #FFF;
+	text-shadow: -1px 0 #333, 0 1px #333, 1px 0 #333, 0 -1px #333;
+	
+	font-family:Helvetica;
+	font-size:24px;
+	font-weight:700;
+	
+	text-align:center;
+}
+
+.input-form .header h2
+{
+	padding:5px 0px;
+	margin:0px;
+	
+	color:#FFF;
+	text-shadow: -1px 0 #777, 0 1px #777, 1px 0 #777, 0 -1px #777;
+	
+	font-family:Helvetica;
+	font-size:14px;
+	font-weight:700;
+	
+	text-align:center;
+}
+
+.input-form h3
+{
+	margin:0px 0px 20px;
+	font-family:Verdana;
+	font-size:14px;
+	font-weight:700;
+}
+
+.input-form .back-button
+{
+	float:left;
+}
+
+.input-form .next-button
+{
+	float:right;
+}
+
+.input-form .button
+{
+	background: linear-gradient( #4d7bd6 5%, #5689db 100%);
+	background-color:#4d7bd6;
+	
+	border-radius:5px;
+	border:1px solid #566963;
+	
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	
+	font-family:Verdana;
+	font-size:13px;
+	font-weight:bold;
+	
+	padding:7px 28px 7px 28px;
+	text-shadow:0px 1px 0px #154682;
+}
+
+.input-form .button:hover
+{
+	background: linear-gradient(  #5689db 100%, #4d7bd6 5% );
+}
+
+.input-form .button:active
+{
+	padding:8px 27px 6px 29px;
+}
+
+.input-form .text-input
+{
+	font-size: 12px;
+	
+	display: block;
+	border-style: solid;
+	border-width: 1px;
+	border-color: #999;
+	margin-top: 20px;
+	margin-bottom: 20px;
+	padding: 11px 25px;
+	padding-left: 55px;
+	width: 200px;
+	color: #777;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) inset;
+}
+
+.input-form .text-input-email
+{
+	background: #fff url( '../images/icons/email_edit.png' ) 16px 10px no-repeat;
+}
+
+.input-form .text-input-password
+{
+	background: #fff url( '../images/icons/lock_edit.png' ) 16px 10px no-repeat;
+}
+
+.input-form .text-input-username
+{
+	background: #fff url( '../images/icons/user_edit.png' ) 16px 10px no-repeat;
+}
+
+.input-form .text-input:active
+{
+	border-color: #5689db;
+}
+
+.input-form .input-error
+{
+	background-color:#FFC0CB;
+	border-color:#990000;
+	color:#990000;
+}
+
+.input-form .hidden
+{
+	display:none;
+}
+
+.input-form .form-fields div div
+{
+	padding: 0px 33px;
+}
+
+.input-form .form-fields div .cell-left
+{
+	border-right:1px solid #999;
+}
+
+.input-form .form-fields div .cell-right
+{
+	border-left:1px solid #EEE;
+}
+
+.input-form .steps
+{
+	color:#FFF;
+	text-shadow:0px 1px 0px #154682;
+	font-family:Verdana;
+	font-size:12px;
+	font-weight:700;
+	list-style:none;
+	margin:0px 0px 20px;
+	padding:0px;
+	background-color:#888;
+	border-top: 1px solid #444;
+	border-left: 1px solid #444;
+	height:36px;
+}
+
+.input-form .steps div div
+{
+	margin:0px;
+	padding:11px 0px 9px;
+	background-color:#888;
+	position:relative;
+	border-right: 1px solid #444;
+	height:16px;
+	border-bottom: 1px solid #444;
+	border-right: 1px solid #444;
+	text-align:center;
+}
+
+.input-form .steps div div.step-header
+{
+	background-color:#444;
+}
+
+.input-form .steps div div.step-active
+{
+	color:#FFF;
+	background: #5689db;
+}
+
+.input-form .button-spacer
+{
+	display:block;
+	height:32px;
+}
