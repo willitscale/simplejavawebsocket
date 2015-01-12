@@ -10,19 +10,19 @@ import uk.co.n3tw0rk.websocketregistration.wrappers.AbstractionThread;
 
 public class SocketClient extends WebSocketClient
 {
-	private Socket socket = null;
+	protected Socket socket = null;
 	
-	private StringBuilder input = null;
-	private byte[] output;
+	protected StringBuilder input = null;
+	protected byte[] output;
 
-	private InputStream inputStream = null;
-	private OutputStream outputStream = null;
+	protected InputStream inputStream = null;
+	protected OutputStream outputStream = null;
 	
-	private int buffer;
+	protected int buffer;
 	
-	private boolean listen = true;
+	protected boolean listen = true;
 
-	private WebSocketVersion webSocketVersion;
+	protected WebSocketVersion webSocketVersion;
 	
 	public SocketClient( Socket socket )
 	{
@@ -98,7 +98,9 @@ public class SocketClient extends WebSocketClient
 				{
 					// Invalid Header Sent so drop the connection
 					if( 0 == this.input.length() )
+					{
 						this.listen = false;
+					}
 
 					this.webSocketVersion = ( new WebsocketVersionFactory( this.input.toString() ) ).getVersion();
 

@@ -116,5 +116,5 @@ public class Config extends Abstraction
 	 * @var int
 	 * @static
 	 */
-	public final static int SERVER_SOCKET = 443;
+	public final static int SERVER_SOCKET = 8081;
 }

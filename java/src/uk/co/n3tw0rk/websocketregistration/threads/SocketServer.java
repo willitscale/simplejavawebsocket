@@ -3,6 +3,7 @@ package uk.co.n3tw0rk.websocketregistration.threads;
 import java.io.IOException;
 import java.net.ServerSocket;
 
+import uk.co.n3tw0rk.websocketregistration.events.Event;
 import uk.co.n3tw0rk.websocketregistration.exceptions.SocketServerException;
 import uk.co.n3tw0rk.websocketregistration.pools.SocketPool;
 import uk.co.n3tw0rk.websocketregistration.wrappers.AbstractionThread;
@@ -29,12 +30,14 @@ public class SocketServer extends WebSocketServer
 	 * @throws SocketServerException
 	 * @throws IOException
 	 */
-	public SocketServer( int port )
+	public SocketServer( int port, Event event )
 		throws SocketServerException, IOException
 	{
 		if( !SocketPool.add( port ) )
+		{
 			throw new SocketServerException();
-		
+		}
+
 		this.port = port;
 		this.serverSocket = new ServerSocket( this.port );
 	}

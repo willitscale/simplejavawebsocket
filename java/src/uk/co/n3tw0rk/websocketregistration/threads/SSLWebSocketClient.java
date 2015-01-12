@@ -2,13 +2,11 @@ package uk.co.n3tw0rk.websocketregistration.threads;
 
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.Socket;
 
 import javax.net.ssl.SSLSocket;
 
 import uk.co.n3tw0rk.websocketregistration.factories.WebsocketVersionFactory;
 import uk.co.n3tw0rk.websocketregistration.structures.WebSocketVersion;
-import uk.co.n3tw0rk.websocketregistration.wrappers.AbstractionThread;
 
 public class SSLWebSocketClient extends WebSocketClient
 {
@@ -67,7 +65,9 @@ public class SSLWebSocketClient extends WebSocketClient
 					 * @see https://forums.oracle.com/thread/1146968
 					 */
 					if( 0 < this.inputStream.available() )
+					{
 						discrete = false;
+					}
 					
 					console( this.buffer );
 					

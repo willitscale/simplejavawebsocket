@@ -6,6 +6,7 @@ import uk.co.n3tw0rk.websocketregistration.framing.DataFrame;
 import uk.co.n3tw0rk.websocketregistration.framing.DataFrameRequest;
 import uk.co.n3tw0rk.websocketregistration.framing.rfc6455.RFC6455_DataFrame;
 import uk.co.n3tw0rk.websocketregistration.framing.rfc6455.RFC6455_DataFrameResponse;
+import uk.co.n3tw0rk.websocketregistration.listeners.Events;
 import uk.co.n3tw0rk.websocketregistration.structures.Request;
 import uk.co.n3tw0rk.websocketregistration.structures.Response;
 
@@ -27,14 +28,14 @@ public class RFC6455_Response extends Response
 			case RFC6455_DataFrame.OP_CODE_TEXT : 
 			{
 				this.dataFrameResponse.setOPCode( RFC6455_DataFrame.OP_CODE_TEXT );
-				this.dataFrameResponse.setPayload( dataFrame.getPayload() );
+				this.dataFrameResponse.setPayload( Events.getEvent().event( dataFrame.getPayload() ) );
 				break;
 			}
 			
 			case RFC6455_DataFrame.OP_CODE_BINARY : 
 			{
 				this.dataFrameResponse.setOPCode( RFC6455_DataFrame.OP_CODE_BINARY );
-				this.dataFrameResponse.setPayload( dataFrame.getPayload() );
+				this.dataFrameResponse.setPayload( Events.getEvent().event( dataFrame.getPayload() ) );
 				break;
 			}
 			
@@ -50,14 +51,14 @@ public class RFC6455_Response extends Response
 			case RFC6455_DataFrame.OP_CODE_PING : 
 			{
 				this.dataFrameResponse.setOPCode( RFC6455_DataFrame.OP_CODE_PONG );
-				this.dataFrameResponse.setPayload( dataFrame.getPayload() );
+				this.dataFrameResponse.setPayload( Events.getEvent().event( dataFrame.getPayload() ) );
 				break;
 			}
 
 			case RFC6455_DataFrame.OP_CODE_PONG : 
 			{
 				this.dataFrameResponse.setOPCode( RFC6455_DataFrame.OP_CODE_PING );
-				this.dataFrameResponse.setPayload( dataFrame.getPayload() );
+				this.dataFrameResponse.setPayload( Events.getEvent().event( dataFrame.getPayload() ) );
 				break;
 			}
 
