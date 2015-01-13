@@ -144,7 +144,7 @@ public class SocketClient extends WebSocketClient
 		return ( null != this.webSocketVersion && this.webSocketVersion.handshake.isEstablished( ) );
 	}
 	
-	private boolean validateConnection()
+	protected boolean validateConnection()
 	{
 		return ( !this.socket.isConnected() || this.socket.isInputShutdown() || this.socket.isOutputShutdown() );
 	}
