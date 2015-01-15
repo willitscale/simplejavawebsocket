@@ -114,11 +114,10 @@ public class ChannelWebSocketClient extends SocketClient
 				}
 				while( 0 != this.mIS.available() || this.mDiscrete );
 				
-				if( 0 < this.mOutputBuffer.length() )
+				if( !handshakeComplete() )
 				{
 					webSocketVersion = ( new WebsocketVersionFactory( this.mOutputBuffer.toString() ) ).getVersion();
 					mWrite.addEvent( webSocketVersion.handshake.getResponse() );
-					this.mOutputBuffer.setLength( 0 );
 					console( "Handshake Complete" );
 				}
 				else
@@ -209,22 +208,23 @@ public class ChannelWebSocketClient extends SocketClient
 				{
 					if( 0 < this.mWriteStack.size() )
 					{
-						synchronized( socket )
-						{
-							WriteEvent event = this.mWriteStack.poll();
 
-							if( null != event )
-							{
-								this.mOS.write( event.mBuffer );
-								this.mOS.flush();
-							}
+						WriteEvent event = this.mWriteStack.poll();
+
+						if( null != event )
+						{
+							System.out.println( event.mBuffer.toString() );
+							this.mOS.write( event.mBuffer );
+							this.mOS.flush();
 						}
 					}
 					else
 					{
-						synchronized( this.mWriteStack )
+						synchronized( this )
 						{
+							System.out.println( "Waiting" );
 							this.wait();
+							System.out.println( "Resumed" );
 						}
 					}
 				}
