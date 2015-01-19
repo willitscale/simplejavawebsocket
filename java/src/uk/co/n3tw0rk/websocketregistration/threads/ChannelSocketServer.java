@@ -7,8 +7,9 @@ import java.nio.channels.ServerSocketChannel;
 import uk.co.n3tw0rk.websocketregistration.events.Event;
 import uk.co.n3tw0rk.websocketregistration.exceptions.SocketServerException;
 import uk.co.n3tw0rk.websocketregistration.pools.SocketPool;
+import uk.co.n3tw0rk.websocketregistration.wrappers.AbstractionThread;
 
-public class ChannelSocketServer
+public class ChannelSocketServer extends AbstractionThread
 {
 	protected Event event;
 	protected int port;

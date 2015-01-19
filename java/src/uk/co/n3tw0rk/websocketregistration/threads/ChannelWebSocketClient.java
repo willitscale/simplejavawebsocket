@@ -1,9 +1,11 @@
 package uk.co.n3tw0rk.websocketregistration.threads;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.Socket;
+import java.nio.ByteBuffer;
+import java.nio.channels.ClosedChannelException;
+import java.nio.channels.SelectionKey;
+import java.nio.channels.Selector;
+import java.nio.channels.SocketChannel;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -11,34 +13,48 @@ import uk.co.n3tw0rk.websocketregistration.exceptions.HandshakeException;
 import uk.co.n3tw0rk.websocketregistration.exceptions.WebsocketVersionException;
 import uk.co.n3tw0rk.websocketregistration.factories.WebsocketVersionFactory;
 
-public class ChannelWebSocketClient extends SocketClient
+public class ChannelWebSocketClient extends ClannelSocketClient
 {
+
 	protected ReadThread mRead;
 	protected WriteThread mWrite;
 
-	public ChannelWebSocketClient( Socket socket )
+	public ChannelWebSocketClient( SocketChannel client, Selector selector )
 	{
-		super( socket );
+		super( client );
+    	System.out.println( this.getClass().getName() + " - Initialised" );
+		
+		if( this.mClient != null)
+        {
+			try
+			{
+				this.mClient.configureBlocking( false );
+                this.mClientKey = this.mClient.register( selector, SelectionKey.OP_READ, SelectionKey.OP_WRITE );
+                this.mClientProperties.put( ChannelWebSocketServer.CHANNEL_TYPE, ChannelWebSocketServer.CLIENT_CHANNEL );
+                this.mClientKey.attach( this.mClientProperties );
+			}
+			catch( ClosedChannelException e )
+			{
+				e.printStackTrace();
+			}
+			catch( IOException e )
+			{
+				e.printStackTrace();
+			}
+        }
 	}
 
 	public void run()
 	{
-		try
-		{
-			console( "Client connected" );
+    	System.out.println( this.getClass().getName() + " - Running" );
 
-			this.mRead = new ReadThread( this.socket.getInputStream() );
-			this.mWrite = new WriteThread( this.socket.getOutputStream() );
-			
-			( new Thread( this.mRead ) ).start();
-			( new Thread( this.mWrite ) ).start();
-		}
-		catch( Exception exception )
-		{
-			
-		}
+    	this.mRead = new ReadThread();
+    	this.mWrite = new WriteThread();
+
+    	( new Thread( this.mRead ) ).start();
+    	( new Thread( this.mWrite ) ).start();
 	}
-	
+
 	public class WriteEvent
 	{
 		public byte[] mBuffer;
@@ -67,85 +83,85 @@ public class ChannelWebSocketClient extends SocketClient
 	 */
 	public class ReadThread implements Runnable
 	{
-		protected InputStream mIS;
 		protected boolean mDiscrete = true;
-		protected int mBuffer;
 		protected StringBuilder mOutputBuffer = new StringBuilder();
-		
-		public ReadThread( InputStream is )
-		{
-			this.mIS = is;
-		}
+
+        ByteBuffer mBuffer = ByteBuffer.allocate( 128 );
+        int mBytesRead = 0;
 
 		@Override
 		public void run()
 		{
-			if( null == socket || socket.isClosed() )
-			{
-				return;
-			}
+            for(;;)
+            {
+    			if( null == mClient || !mClient.isConnected() )
+    			{
+    				return;
+    			}
 
-			try
-			{
-				do
+	            this.mBytesRead = 0;
+
+				try
 				{
-					this.mBuffer = this.mIS.read();
-
-					if( 0 < this.mIS.available() )
+					int bytesRead;
+		            while( 0 < ( bytesRead = mClient.read( this.mBuffer ) ) )
 					{
-						this.mDiscrete = false;
+		            	this.mBytesRead += bytesRead;
+		            	
+		            	this.mBuffer.flip();
+
+						for( byte b : this.mBuffer.array() )
+						{
+							if( handshakeComplete() )
+							{
+								webSocketVersion.request.setData( b );
+							}
+							else
+							{
+								this.mOutputBuffer.append( ( char ) b );
+							}
+						}
+
+						this.mBuffer.clear();
 					}
 
-					// WebSocket Error as all data should be in single singed byte range ( 0 - 255 )
-					if( -1 >= this.mBuffer || 256 <= this.mBuffer )
-					{
-						console( "Websocket Error" );
-						break;
-					}
-					
-					if( handshakeComplete() )
-					{
-						webSocketVersion.request.setData( this.mBuffer );
-					}
-					else
-					{
-						this.mOutputBuffer.append( ( char ) this.mBuffer );
-					}
+		            if( 0 < this.mBytesRead )
+		            {
+						if( !handshakeComplete() )
+						{
+							webSocketVersion = ( new WebsocketVersionFactory( this.mOutputBuffer.toString() ) ).getVersion();
+							mWrite.addEvent( webSocketVersion.handshake.getResponse() );
+							console( "Handshake Complete" );
+						}
+						else
+						{
+							mWrite.addEvent( webSocketVersion.process() );
+						}
+		
+						if( webSocketVersion.response.isClosed() )
+						{
+							console( "Websocket Closed" );
+							mWrite.kill();
+						}
+		            }
+		            Thread.sleep( 100L );
 				}
-				while( 0 != this.mIS.available() || this.mDiscrete );
-				
-				if( !handshakeComplete() )
+				catch( IOException e )
 				{
-					webSocketVersion = ( new WebsocketVersionFactory( this.mOutputBuffer.toString() ) ).getVersion();
-					mWrite.addEvent( webSocketVersion.handshake.getResponse() );
-					console( "Handshake Complete" );
+					e.printStackTrace();
 				}
-				else
+				catch( WebsocketVersionException e )
 				{
-					mWrite.addEvent( webSocketVersion.process() );
+					e.printStackTrace();
 				}
-
-				if( webSocketVersion.response.isClosed() )
+				catch( HandshakeException e )
 				{
-					console( "Websocket Closed" );
-					mWrite.kill();
+					e.printStackTrace();
 				}
-			}
-			catch( IOException e )
-			{
-				e.printStackTrace();
-			}
-			catch( WebsocketVersionException e )
-			{
-				e.printStackTrace();
-			}
-			catch( HandshakeException e )
-			{
-				e.printStackTrace();
-			}
-			finally
-			{
-				this.run();
+				catch( InterruptedException e )
+				{
+					e.printStackTrace();
+				}
 			}
 		}
 	}
@@ -160,20 +176,11 @@ public class ChannelWebSocketClient extends SocketClient
 	{
 		public Queue<WriteEvent> mWriteStack = new LinkedList<WriteEvent>();
 
-		protected OutputStream mOS;
-		
-		public WriteThread( OutputStream os )
-		{
-			this.mOS = os;
-		}
-		
 		public synchronized void addEvent( byte[] eventBytes )
 		{
-			System.out.println( "addEvent 1" );
+			System.out.println( new StringBuilder().append( eventBytes ).toString() );
 			this.mWriteStack.add( new WriteEvent( eventBytes ) );
-			System.out.println( "addEvent 2" );
 			this.notify();
-			System.out.println( "addEvent 3" );
 		}
 		
 		public synchronized void kill()
@@ -182,9 +189,9 @@ public class ChannelWebSocketClient extends SocketClient
 
 			try
 			{
-				socket.close();
+				mClient.close();
 			}
-			catch (IOException e)
+			catch( IOException e )
 			{
 				e.printStackTrace();
 			}
@@ -195,51 +202,40 @@ public class ChannelWebSocketClient extends SocketClient
 		@Override
 		public void run()
 		{
-			if( null == socket || socket.isClosed() )
+			for(;;)
 			{
-				return;
-			}
+				if( null == mClient || !mClient.isConnected() )
+				{
+					return;
+				}
 
-			System.out.println( "THREAD ITERATION" );
-			
-			try
-			{
-				while( true )
+				try
 				{
 					if( 0 < this.mWriteStack.size() )
 					{
-
 						WriteEvent event = this.mWriteStack.poll();
-
+	
 						if( null != event )
 						{
-							System.out.println( event.mBuffer.toString() );
-							this.mOS.write( event.mBuffer );
-							this.mOS.flush();
+							mClient.write( ByteBuffer.wrap( event.mBuffer ) );
 						}
 					}
 					else
 					{
 						synchronized( this )
 						{
-							System.out.println( "Waiting" );
 							this.wait();
-							System.out.println( "Resumed" );
 						}
 					}
 				}
-			}
-			catch( InterruptedException e )
-			{
-				e.printStackTrace();
-			}
-			catch( IOException e )
-			{
-				e.printStackTrace();
-			}
-			finally
-			{
-			//	this.run();
+				catch( InterruptedException e )
+				{
+					e.printStackTrace();
+				}
+				catch( IOException e )
+				{
+					e.printStackTrace();
+				}
 			}
 		}
 	}
