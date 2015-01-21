@@ -1,11 +1,13 @@
 package uk.co.n3tw0rk.websocketregistration.threads;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.nio.channels.ClosedChannelException;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
+import java.security.SecureRandom;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -15,14 +17,24 @@ import uk.co.n3tw0rk.websocketregistration.factories.WebsocketVersionFactory;
 
 public class ChannelWebSocketClient extends ClannelSocketClient
 {
-
 	protected ReadThread mRead;
 	protected WriteThread mWrite;
+	protected String mSessionID;
+
+	public String session()
+	{
+		if( null == this.mSessionID )
+		{
+			SecureRandom random = new SecureRandom();
+			this.mSessionID = new BigInteger( 130, random ).toString( 32 );
+		}
+		return this.mSessionID;
+	}
 
 	public ChannelWebSocketClient( SocketChannel client, Selector selector )
 	{
 		super( client );
-    	System.out.println( this.getClass().getName() + " - Initialised" );
+    	System.out.println( this.getClass().getName() + " - Initialised  - Session : " + this.session() );
 		
 		if( this.mClient != null)
         {
@@ -104,12 +116,15 @@ public class ChannelWebSocketClient extends ClannelSocketClient
 				try
 				{
 					int bytesRead;
+
 		            while( 0 < ( bytesRead = mClient.read( this.mBuffer ) ) )
 					{
 		            	this.mBytesRead += bytesRead;
 		            	
 		            	this.mBuffer.flip();
 
+		            	int bufferPosition = 0;
+		            	
 						for( byte b : this.mBuffer.array() )
 						{
 							if( handshakeComplete() )
@@ -119,6 +134,11 @@ public class ChannelWebSocketClient extends ClannelSocketClient
 							else
 							{
 								this.mOutputBuffer.append( ( char ) b );
+							}
+							
+							if( ++bufferPosition >= bytesRead )
+							{
+								break;
 							}
 						}
 
