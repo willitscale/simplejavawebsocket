@@ -232,7 +232,7 @@ public class RFC6455_DataFrameResponse extends RFC6455_DataFrame implements Data
 	 */
 	private void putByte( int tmpByte )
 	{
-		console( "byte >> " + ( byte ) tmpByte );
+		// console( "byte >> " + ( byte ) tmpByte );
 
 		this.byteBuffer.put( ( byte ) tmpByte );
 	}

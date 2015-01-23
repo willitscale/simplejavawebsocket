@@ -67,9 +67,13 @@ public class RFC6455_DataFrameRequest extends RFC6455_DataFrame implements DataF
 		this.OP_CODE = ( byte ) ( data & FOUR_BITS );
 
 		if( OP_CODE_CLOSE == this.OP_CODE )
+		{
 			this.buildingDataSet = DATA_NULL;
+		}
 		else
+		{
 			this.buildingDataSet = DATA_FRAME_MASK_PAYLOAD_BYTE;
+		}
 	}
 
 	private void maskPayload( int data )
@@ -90,9 +94,13 @@ public class RFC6455_DataFrameRequest extends RFC6455_DataFrame implements DataF
 			this.PAYLOAD = 0;
 		}
 		else if( ONE_BIT == this.MASK )
+		{
 			this.buildingDataSet = DATA_FRAME_MASKING_KEY;
+		}
 		else
+		{
 			this.buildingDataSet = DATA_FRAME_PAYLOAD_DATA;
+		}
 	}
 	
 	private void extendedPayload( int data )
@@ -101,11 +109,17 @@ public class RFC6455_DataFrameRequest extends RFC6455_DataFrame implements DataF
 		this.PAYLOAD = ( tmpData << ( 8 * this.payloadExtended-- ) );
 
 		if( 0 <= this.maskBytes )
+		{
 			this.buildingDataSet = DATA_FRAME_PAYLOAD_DATA;
+		}
 		else if( ONE_BIT == this.MASK )
+		{
 			this.buildingDataSet = DATA_FRAME_MASKING_KEY;
+		}
 		else
+		{
 			this.buildingDataSet = DATA_FRAME_PAYLOAD_DATA;
+		}
 	}
 
 	private void buildMaskingKey( int data )
@@ -113,13 +127,17 @@ public class RFC6455_DataFrameRequest extends RFC6455_DataFrame implements DataF
 		this.MASKING_KEY[ this.maskBytes++ ] = data;
 
 		if( MAX_MASK_BYTES == this.maskBytes )
+		{
 			this.buildingDataSet = DATA_FRAME_PAYLOAD_DATA;
+		}
 	}
 
 	private void buildingPayloadData( int data )
 	{
 		if( ONE_BIT == this.MASK )
+		{
 			data = this.mask( data, this.payloadData.length() );
+		}
 
 		this.payloadData.append( ( char ) data );
 	}

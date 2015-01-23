@@ -14,7 +14,7 @@ public class RFC6455_Request extends Request
 	@Override
 	public void setData( int data )
 	{
-		console( "<< " + data );
+		//console( "<< " + data );
 		this.dataFrame.setFrameData( data );
 	}
 
@@ -22,7 +22,9 @@ public class RFC6455_Request extends Request
 	public void flush()
 	{
 		if( null == this.dataFrame || this.dataFrame.isFinal() )
+		{
 			this.dataFrame = new RFC6455_DataFrameRequest();
+		}
 	}
 
 }

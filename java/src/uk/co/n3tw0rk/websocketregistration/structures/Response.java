@@ -12,6 +12,8 @@ public abstract class Response extends Abstraction
 	protected DataFrameResponse dataFrameResponse;
 	
 	public abstract ByteBuffer process( Request request );
+	
+	public abstract ByteBuffer process( Request request, String session );
 
 	public abstract boolean isClosed();
 }

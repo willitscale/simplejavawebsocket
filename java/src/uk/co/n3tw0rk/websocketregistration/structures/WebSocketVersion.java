@@ -7,10 +7,15 @@ public class WebSocketVersion
 	public Handshake handshake;
 	public Request request;
 	public Response response;
-	
+
 	public byte[] process()
 	{
-		ByteBuffer byteBuffer = this.response.process( this.request );
+		return this.process( null );
+	}
+	
+	public byte[] process( String session )
+	{
+		ByteBuffer byteBuffer = this.response.process( this.request, session );
 		
 		if( null == byteBuffer )
 		{

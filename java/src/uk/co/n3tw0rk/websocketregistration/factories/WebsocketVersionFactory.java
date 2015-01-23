@@ -12,11 +12,15 @@ import uk.co.n3tw0rk.websocketregistration.structures.hybi10.*;
 import uk.co.n3tw0rk.websocketregistration.structures.rfc6455.*;
 import uk.co.n3tw0rk.websocketregistration.exceptions.HandshakeException;
 import uk.co.n3tw0rk.websocketregistration.exceptions.WebsocketVersionException;
+import uk.co.n3tw0rk.websocketregistration.framing.rfc6455.RFC6455_DataFrame;
+import uk.co.n3tw0rk.websocketregistration.framing.rfc6455.RFC6455_DataFrameResponse;
 import uk.co.n3tw0rk.websocketregistration.structures.WebSocketVersion;
 import uk.co.n3tw0rk.websocketregistration.wrappers.Abstraction;
 
 public class WebsocketVersionFactory extends Abstraction
 {
+	public static int mVersion = 0;
+	
 	private HashMap<String, String> headers;
 	private String uri;
 	
@@ -74,11 +78,11 @@ public class WebsocketVersionFactory extends Abstraction
 		if( null == this.headers.get( "Sec-WebSocket-Version" ) )
 			throw new WebsocketVersionException();
 
-		int version = Integer.parseInt( this.headers.get( "Sec-WebSocket-Version" ) );
+		mVersion = Integer.parseInt( this.headers.get( "Sec-WebSocket-Version" ) );
 
 		WebSocketVersion webSocketVersion = new WebSocketVersion();
 
-		switch( version )
+		switch( mVersion )
 		{
 			case 4 :
 			{
@@ -131,6 +135,64 @@ public class WebsocketVersionFactory extends Abstraction
 		}
 
 		return webSocketVersion;
+	}
+	
+	public static byte[] parcelString( String data ) throws WebsocketVersionException, HandshakeException
+	{
+		switch( mVersion )
+		{
+			case 4 :
+			{
+				break;
+			}
+			case 5 :
+			{
+				break;
+			}
+			case 6 :
+			{
+				break;
+			}
+			case 7 :
+			{
+				break;
+			}
+			case 8 :
+			{
+				break;
+			}
+			case 9 :
+			{
+				break;
+			}
+			case 10 :
+			{
+				break;
+			}
+			case 11 :
+			{
+				break;
+			}
+			case 12 :
+			{
+				break;
+			}
+			case 13 :
+			{
+				RFC6455_DataFrameResponse dataFrameResponse = new RFC6455_DataFrameResponse();
+				dataFrameResponse.setMasked( false );
+				dataFrameResponse.setOPCode( RFC6455_DataFrame.OP_CODE_TEXT );
+				dataFrameResponse.setPayload( data );
+				return dataFrameResponse.getDataFrame().array();
+			}
+			default :
+			{
+				// Unsupported Version
+				throw new WebsocketVersionException();
+			}
+		}
+
+		return null;
 	}
 
 }

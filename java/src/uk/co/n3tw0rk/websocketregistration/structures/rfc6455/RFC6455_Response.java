@@ -15,6 +15,12 @@ public class RFC6455_Response extends Response
 	@Override
 	public ByteBuffer process( Request request )
 	{
+		return this.process( request, null );
+	}
+
+	@Override
+	public ByteBuffer process( Request request, String session )
+	{
 		// Need a frame for every response
 		this.dataFrameResponse = new RFC6455_DataFrameResponse();
 		
@@ -28,14 +34,14 @@ public class RFC6455_Response extends Response
 			case RFC6455_DataFrame.OP_CODE_TEXT : 
 			{
 				this.dataFrameResponse.setOPCode( RFC6455_DataFrame.OP_CODE_TEXT );
-				this.dataFrameResponse.setPayload( Events.getEvent().event( dataFrame.getPayload() ) );
+				this.dataFrameResponse.setPayload( Events.getEvent().event( dataFrame.getPayload(), session ) );
 				break;
 			}
 			
 			case RFC6455_DataFrame.OP_CODE_BINARY : 
 			{
 				this.dataFrameResponse.setOPCode( RFC6455_DataFrame.OP_CODE_BINARY );
-				this.dataFrameResponse.setPayload( Events.getEvent().event( dataFrame.getPayload() ) );
+				this.dataFrameResponse.setPayload( Events.getEvent().event( dataFrame.getPayload(), session ) );
 				break;
 			}
 			
@@ -51,14 +57,14 @@ public class RFC6455_Response extends Response
 			case RFC6455_DataFrame.OP_CODE_PING : 
 			{
 				this.dataFrameResponse.setOPCode( RFC6455_DataFrame.OP_CODE_PONG );
-				this.dataFrameResponse.setPayload( Events.getEvent().event( dataFrame.getPayload() ) );
+				this.dataFrameResponse.setPayload( Events.getEvent().event( dataFrame.getPayload(), session ) );
 				break;
 			}
 
 			case RFC6455_DataFrame.OP_CODE_PONG : 
 			{
 				this.dataFrameResponse.setOPCode( RFC6455_DataFrame.OP_CODE_PING );
-				this.dataFrameResponse.setPayload( Events.getEvent().event( dataFrame.getPayload() ) );
+				this.dataFrameResponse.setPayload( Events.getEvent().event( dataFrame.getPayload(), session ) );
 				break;
 			}
 

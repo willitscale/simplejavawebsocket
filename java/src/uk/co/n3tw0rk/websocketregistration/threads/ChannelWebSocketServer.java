@@ -50,7 +50,7 @@ public class ChannelWebSocketServer extends ChannelSocketServer
 
 		this.mSocketChannel = ServerSocketChannel.open();
 		this.mSocketChannel.bind( new InetSocketAddress( "", port ) );
-		this.mSocketChannel.configureBlocking(false);
+		this.mSocketChannel.configureBlocking( false );
 
         this.mSelector = Selector.open();
         
