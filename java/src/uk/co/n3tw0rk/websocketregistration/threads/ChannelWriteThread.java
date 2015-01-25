@@ -53,7 +53,9 @@ public class ChannelWriteThread extends ClannelSocketClient
 	{
 		for(;;)
 		{
-			if( null == this.mClient || !this.mClient.isConnected() || !this.mClient.isOpen() )
+			if( null == this.mClient || 
+				!this.mClient.isConnected() || 
+				!this.mClient.isOpen() )
 			{
 				return;
 			}

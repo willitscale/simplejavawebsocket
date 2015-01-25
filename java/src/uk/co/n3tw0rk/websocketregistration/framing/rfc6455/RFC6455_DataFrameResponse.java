@@ -44,7 +44,7 @@ public class RFC6455_DataFrameResponse extends RFC6455_DataFrame implements Data
 	 * @var ByteBuffer
 	 */
 	private ByteBuffer byteBuffer;
-	
+
 	/**
 	 * Data Frame Response Constructor
 	 * 
