@@ -38,7 +38,7 @@ public class ChannelWebSocketServer extends ChannelSocketServer
 	 * @throws SocketServerException
 	 * @throws IOException
 	 */
-	public ChannelWebSocketServer( int port, Event event )
+	public ChannelWebSocketServer( String host, int port, Event event )
 		throws SocketServerException, IOException
 	{
 		if( !SocketPool.add( port ) )
@@ -48,9 +48,24 @@ public class ChannelWebSocketServer extends ChannelSocketServer
 
 		this.port = port;
 
+		InetSocketAddress address = null;
+		
+		if( null == host || host.isEmpty() )
+		{
+			address = new InetSocketAddress( port );
+		}
+		else
+		{
+			address = new InetSocketAddress( host, port );
+		}
+		
 		this.mSocketChannel = ServerSocketChannel.open();
-		this.mSocketChannel.bind( new InetSocketAddress( "", port ) );
+		//this.mSocketChannel.socket().bind( address );
+		this.mSocketChannel.bind( address );
 		this.mSocketChannel.configureBlocking( false );
+		
+		console( "Socket Bind " + address );
+		console( "Socket Bind " + this.mSocketChannel.getLocalAddress() );
 
         this.mSelector = Selector.open();
         

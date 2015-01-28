@@ -2,7 +2,6 @@ package uk.co.n3tw0rk.websocketregistration.structures.rfc6455;
 
 import java.nio.ByteBuffer;
 
-import uk.co.n3tw0rk.websocketregistration.framing.DataFrame;
 import uk.co.n3tw0rk.websocketregistration.framing.DataFrameRequest;
 import uk.co.n3tw0rk.websocketregistration.framing.rfc6455.RFC6455_DataFrame;
 import uk.co.n3tw0rk.websocketregistration.framing.rfc6455.RFC6455_DataFrameResponse;
