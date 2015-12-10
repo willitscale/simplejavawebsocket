@@ -23,8 +23,6 @@ public class Config extends Abstraction
 	 * Generate a Self Signed Certificate
 	 * keytool -genkey -keyalg RSA -keystore keystore.jks -storepass password -validity 360 -keysize 2048
 	 * 
-	 * @see http://www.sslshopper.com/article-how-to-create-a-self-signed-certificate-using-java-keytool.html
-	 * 
 	 * Generate a Java keystore and key pair
 	 * keytool -genkey -alias mydomain -keyalg RSA -keystore keystore.jks -keysize 2048
 	 * 
@@ -40,6 +38,7 @@ public class Config extends Abstraction
 	 * Generate a keystore and self-signed certificate (see How to Create a Self Signed Certificate using Java Keytool for more info)
 	 * keytool -genkey -keyalg RSA -alias selfsigned -keystore keystore.jks -storepass password -validity 360 -keysize 2048
 	 * 
+	 * @see http://www.sslshopper.com/article-how-to-create-a-self-signed-certificate-using-java-keytool.html
 	 * @see http://www.sslshopper.com/article-most-common-java-keytool-keystore-commands.html
 	 */
 	
